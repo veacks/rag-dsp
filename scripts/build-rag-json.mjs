@@ -2,19 +2,34 @@ import fs from 'fs';
 import path from 'path';
 import crypto from 'crypto';
 import { createRequire } from 'module';
-import OpenAI from 'openai';
+import { fileURLToPath } from 'url';
+import { OpenAIEmbeddings } from '@langchain/openai';
+import { RecursiveCharacterTextSplitter } from '@langchain/textsplitters';
+import { buildRichPdfChunks } from './lib/pdf-pipeline.mjs';
 import 'dotenv/config';
 
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const repoRoot = path.resolve(__dirname, '..');
+
 /** Bump when the JSON shape or chunking/embed semantics change. */
-const SCHEMA_VERSION = 3;
+const SCHEMA_VERSION = 5;
 
 /** CJS require so pdf-parse does not run its debug self-test (broken under ESM). */
 const require = createRequire(import.meta.url);
 const pdf = require('pdf-parse');
 
 const PDF_PATH = process.env.PDF_PATH || './DesigningAudioEffectPlugins.pdf';
-/** Default folder in the repo for PDFs (`rager build` / `npm run build:rag` uses it when it contains at least one `*.pdf`). */
-const DEFAULT_PDF_DIR = './pdf';
+
+/** Default PDF directory when `RAG_SOURCE_DIR` / `SOURCE_DIR` are unset. Must be a folder path, not a glob (`*.pdf` is stripped if pasted by mistake). */
+function normalizedDefaultPdfDir() {
+  const fallback = './pdf';
+  const raw = (process.env.DEFAULT_PDF_DIR || '').trim();
+  if (!raw) return fallback;
+  let s = raw.replace(/\/\*\.pdf\/?$/i, '');
+  s = s.replace(/\/+$/, '');
+  return s || fallback;
+}
+const DEFAULT_PDF_DIR = normalizedDefaultPdfDir();
 /** One URL per line; `#` starts a comment. If non-empty, crawl runs instead of PDFs (unless RAG_IGNORE_SITES_TXT). */
 const DEFAULT_SITES_TXT = './sources/sites.txt';
 /** Public site origin for chunk links, e.g. `https://docs.example.com` (no trailing slash required). */
@@ -25,6 +40,13 @@ const EMBEDDING_MODEL = 'text-embedding-3-small';
 const CHUNK_SIZE = 1200;
 const CHUNK_OVERLAP = 200;
 const CRAWL_DELAY_MS = Math.max(0, Number(process.env.CRAWL_DELAY_MS || 400));
+
+const RAG_PDF_LEGACY = ['1', 'true', 'yes'].includes((process.env.RAG_PDF_LEGACY || '').toLowerCase());
+const RAG_PDF_VISION = ['1', 'true', 'yes'].includes((process.env.RAG_PDF_VISION || '').toLowerCase());
+const RAG_VISION_MODEL = process.env.RAG_VISION_MODEL || 'gpt-4o-mini';
+const RAG_PDF_MAX_FIGURES = Math.max(0, Number(process.env.RAG_PDF_MAX_FIGURES || 24));
+const RAG_PDF_RENDER_SCALE = Math.max(0.5, Math.min(3, Number(process.env.RAG_PDF_RENDER_SCALE || 1.5)));
+const ASSETS_DIR = path.join(repoRoot, 'public', 'rag-assets');
 
 function toPosix(p) {
   return p.split(path.sep).join('/');
@@ -105,11 +127,11 @@ async function fetchUrlText(url) {
 
   if (buf.length >= 4 && buf.slice(0, 4).toString() === '%PDF') {
     const parsed = await pdf(buf);
-    return { text: parsed.text, bytes: buf.length, finalUrl };
+    return { text: parsed.text, bytes: buf.length, finalUrl, pdfBuffer: buf };
   }
   if (ct.includes('pdf')) {
     const parsed = await pdf(buf);
-    return { text: parsed.text, bytes: buf.length, finalUrl };
+    return { text: parsed.text, bytes: buf.length, finalUrl, pdfBuffer: buf };
   }
 
   const raw = buf.toString('utf8');
@@ -147,43 +169,173 @@ function listPdfFiles(rootDir) {
     .sort((a, b) => a.relPosix.localeCompare(b.relPosix, 'en'));
 }
 
-function chunkText(text, baseMetadata, idCounter, chunkSize = CHUNK_SIZE, overlap = CHUNK_OVERLAP) {
+async function pdfBufferToChunks(buffer, ctx) {
+  const {
+    relPosix,
+    baseMetadata,
+    idCounter,
+    fileSha256
+  } = ctx;
+  if (RAG_PDF_LEGACY) {
+    const parsed = await pdf(buffer);
+    return {
+      chunks: await chunkText(parsed.text, baseMetadata, idCounter),
+      pdfPipeline: null
+    };
+  }
+  const rich = await buildRichPdfChunks(buffer, {
+    relPosix,
+    baseMetadata,
+    idCounter,
+    fileSha256,
+    assetsDir: ASSETS_DIR,
+    chunkSize: CHUNK_SIZE,
+    chunkOverlap: CHUNK_OVERLAP,
+    visionEnabled: RAG_PDF_VISION,
+    visionModel: RAG_VISION_MODEL,
+    maxFigures: RAG_PDF_MAX_FIGURES,
+    renderScale: RAG_PDF_RENDER_SCALE
+  });
+  return {
+    chunks: rich.chunks,
+    pdfPipeline: {
+      limits: rich.limits,
+      outlinePresent: rich.outlinePresent,
+      sourceKey: rich.sourceKey,
+      assetPrefix: rich.assetUrlPrefix
+    }
+  };
+}
+
+async function chunkText(text, baseMetadata, idCounter, chunkSize = CHUNK_SIZE, overlap = CHUNK_OVERLAP) {
   const clean = text
     .replace(/\r/g, '')
     .replace(/[ \t]+\n/g, '\n')
     .replace(/\n{3,}/g, '\n\n')
     .trim();
-  const chunks = [];
-  let start = 0;
-  while (start < clean.length) {
-    const end = Math.min(start + chunkSize, clean.length);
-    let slice = clean.slice(start, end);
-    if (end < clean.length) {
-      const lastBreak = Math.max(
-        slice.lastIndexOf('\n\n'),
-        slice.lastIndexOf('. '),
-        slice.lastIndexOf('\n')
-      );
-      if (lastBreak > Math.floor(chunkSize * 0.6)) {
-        slice = slice.slice(0, lastBreak + 1);
-      }
-    }
-    chunks.push({
+  if (!clean) return [];
+
+  const splitter = new RecursiveCharacterTextSplitter({
+    chunkSize,
+    chunkOverlap: overlap
+  });
+  const docs = await splitter.createDocuments([clean], [baseMetadata]);
+  return docs
+    .map((doc) => ({
       id: `chunk_${++idCounter.n}`,
-      text: slice.trim(),
+      text: doc.pageContent.trim(),
       metadata: { ...baseMetadata }
-    });
-    start += Math.max(1, slice.length - overlap);
-  }
-  return chunks.filter((c) => c.text);
+    }))
+    .filter((c) => c.text);
 }
 
-async function embedBatch(client, texts) {
-  const res = await client.embeddings.create({
-    model: EMBEDDING_MODEL,
-    input: texts
-  });
-  return res.data.map((d) => d.embedding);
+/** When set, also index local PDFs after a URL crawl (same paths as PDF-only mode). Default: on unless `RAG_MERGE_PDFS=0`. */
+function shouldMergeLocalPdfsAfterCrawl() {
+  const v = (process.env.RAG_MERGE_PDFS ?? '1').toLowerCase();
+  return !['0', 'false', 'no', 'off'].includes(v);
+}
+
+/**
+ * Discover *.pdf under RAG_SOURCE_DIR / DEFAULT_PDF_DIR, then under PDF_PATH if it is a directory or a single file.
+ * @returns {{ entries: { abs: string, relPosix: string, name: string }[], envSourceDir: string, effectiveDir: string, usedPdfPathFallback: boolean }}
+ */
+function resolveLocalPdfFileEntries() {
+  const envSourceDir = (process.env.RAG_SOURCE_DIR || process.env.SOURCE_DIR || '').trim();
+  let effectiveDir = '';
+  if (envSourceDir) {
+    effectiveDir = envSourceDir;
+  } else {
+    const defAbs = path.resolve(DEFAULT_PDF_DIR);
+    if (fs.existsSync(defAbs) && fs.statSync(defAbs).isDirectory()) {
+      effectiveDir = DEFAULT_PDF_DIR;
+    }
+  }
+
+  let entries = effectiveDir ? listPdfFiles(effectiveDir) : [];
+  let usedPdfPathFallback = false;
+
+  if (entries.length === 0) {
+    const resolved = path.resolve(PDF_PATH);
+    if (fs.existsSync(resolved)) {
+      const st = fs.statSync(resolved);
+      if (st.isDirectory()) {
+        entries = listPdfFiles(PDF_PATH);
+        usedPdfPathFallback = entries.length > 0;
+      } else {
+        entries = [
+          {
+            abs: resolved,
+            relPosix: toPosix(path.relative(process.cwd(), resolved)),
+            name: path.basename(resolved)
+          }
+        ];
+        usedPdfPathFallback = true;
+      }
+    }
+  }
+
+  return { entries, envSourceDir, effectiveDir, usedPdfPathFallback };
+}
+
+async function appendChunksFromPdfFileEntries(fileEntries, idCounter, chunks, pdfPipelineRuns) {
+  const fileRows = [];
+  for (const file of fileEntries) {
+    const buffer = fs.readFileSync(file.abs);
+    const sha256 = crypto.createHash('sha256').update(buffer).digest('hex');
+    fileRows.push({
+      path: file.relPosix,
+      name: file.name,
+      sha256,
+      bytes: buffer.length
+    });
+    const baseMetadata = {
+      source: file.name,
+      path: file.relPosix,
+      sitePath: `/${file.relPosix}`
+    };
+    const mapped = siteUrlForRelative(file.relPosix);
+    if (mapped) baseMetadata.url = mapped;
+
+    const out = await pdfBufferToChunks(buffer, {
+      relPosix: file.relPosix,
+      baseMetadata,
+      idCounter,
+      fileSha256: sha256
+    });
+    chunks.push(...out.chunks);
+    if (out.pdfPipeline) pdfPipelineRuns.push({ path: file.relPosix, ...out.pdfPipeline });
+    console.log(`Parsed ${file.relPosix}: ${out.chunks.length} chunks`);
+  }
+  return fileRows;
+}
+
+function buildPdfSourceSummary(fileRows, effectiveDir, usedPdfPathFallback) {
+  const pdfPathResolved = path.resolve(PDF_PATH);
+  const singleFileFromPdfPath =
+    fileRows.length === 1 &&
+    !effectiveDir &&
+    usedPdfPathFallback &&
+    fs.existsSync(pdfPathResolved) &&
+    fs.statSync(pdfPathResolved).isFile();
+  if (singleFileFromPdfPath) {
+    const r = fileRows[0];
+    return {
+      type: 'file',
+      path: pdfPathResolved,
+      name: r.name,
+      sha256: r.sha256,
+      bytes: r.bytes,
+      siteBaseUrl: SITE_BASE_URL || null
+    };
+  }
+  const absSource = effectiveDir ? path.resolve(effectiveDir) : pdfPathResolved;
+  return {
+    type: 'directory',
+    path: absSource,
+    siteBaseUrl: SITE_BASE_URL || null,
+    fileCount: fileRows.length,
+    files: fileRows
+  };
 }
 
 async function main() {
@@ -198,9 +350,15 @@ async function main() {
   );
   const crawlUrls = ignoreSites ? [] : parseSitesList(sitesTxtPath);
 
-  const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+  const embeddings = new OpenAIEmbeddings({
+    model: EMBEDDING_MODEL,
+    apiKey: process.env.OPENAI_API_KEY,
+    batchSize: 50
+  });
   const idCounter = { n: 0 };
   const chunks = [];
+  /** @type {Record<string, unknown>[]} */
+  const pdfPipelineRuns = [];
   /** @type {Record<string, unknown>} */
   let sourceSummary;
 
@@ -211,15 +369,32 @@ async function main() {
       const url = crawlUrls[i];
       if (i > 0 && CRAWL_DELAY_MS) await sleep(CRAWL_DELAY_MS);
       try {
-        const { text, bytes, finalUrl } = await fetchUrlText(url);
+        const { text, bytes, finalUrl, pdfBuffer } = await fetchUrlText(url);
         if (!text || text.length < 20) {
           console.warn(`Skip (empty or tiny body): ${finalUrl}`);
           continue;
         }
-        const sha256 = crypto.createHash('sha256').update(text).digest('hex');
+        const sha256 = crypto
+          .createHash('sha256')
+          .update(pdfBuffer || text)
+          .digest('hex');
         fetched.push({ url: finalUrl, requested: url, bytes, sha256 });
         const baseMetadata = metadataFromFetchedUrl(finalUrl);
-        const part = chunkText(text, baseMetadata, idCounter);
+        let part;
+        if (pdfBuffer) {
+          const u = new URL(finalUrl);
+          const relPosix = toPosix(u.pathname.replace(/^\/+/, '') || 'remote.pdf');
+          const out = await pdfBufferToChunks(pdfBuffer, {
+            relPosix,
+            baseMetadata,
+            idCounter,
+            fileSha256: sha256
+          });
+          part = out.chunks;
+          if (out.pdfPipeline) pdfPipelineRuns.push({ path: relPosix, url: finalUrl, ...out.pdfPipeline });
+        } else {
+          part = await chunkText(text, baseMetadata, idCounter);
+        }
         chunks.push(...part);
         console.log(`Fetched ${finalUrl}: ${part.length} chunk(s), ${text.length} chars`);
       } catch (e) {
@@ -230,7 +405,7 @@ async function main() {
       console.error('No usable content from any URL. Fix URLs or use PDF mode (empty sites list / RAG_IGNORE_SITES_TXT=1).');
       process.exit(1);
     }
-    sourceSummary = {
+    const crawlSourceSummary = {
       type: 'urls',
       listFile: path.resolve(sitesTxtPath),
       urlCount: crawlUrls.length,
@@ -238,102 +413,56 @@ async function main() {
       siteBaseUrl: SITE_BASE_URL || null,
       fetched
     };
+    sourceSummary = crawlSourceSummary;
+
+    if (shouldMergeLocalPdfsAfterCrawl()) {
+      const { entries, effectiveDir, usedPdfPathFallback } = resolveLocalPdfFileEntries();
+      if (entries.length > 0) {
+        const label = effectiveDir
+          ? path.resolve(effectiveDir)
+          : usedPdfPathFallback
+            ? path.resolve(PDF_PATH)
+            : 'local';
+        console.log(`Merging ${entries.length} local PDF(s) after crawl (${label})`);
+        const fileRows = await appendChunksFromPdfFileEntries(entries, idCounter, chunks, pdfPipelineRuns);
+        sourceSummary = {
+          type: 'urls_and_pdfs',
+          urls: crawlSourceSummary,
+          pdfs: buildPdfSourceSummary(fileRows, effectiveDir, usedPdfPathFallback)
+        };
+      }
+    }
   } else {
-    const envSourceDir = (process.env.RAG_SOURCE_DIR || process.env.SOURCE_DIR || '').trim();
-    let effectiveDir = '';
-    if (envSourceDir) {
-      effectiveDir = envSourceDir;
-    } else {
-      const defAbs = path.resolve(DEFAULT_PDF_DIR);
-      if (fs.existsSync(defAbs) && fs.statSync(defAbs).isDirectory()) {
-        effectiveDir = DEFAULT_PDF_DIR;
-      }
-    }
+    const { entries, effectiveDir, usedPdfPathFallback } = resolveLocalPdfFileEntries();
 
-    let pdfFiles = effectiveDir ? listPdfFiles(effectiveDir) : null;
-
-    if (pdfFiles && pdfFiles.length === 0) {
-      if (envSourceDir) {
-        console.error(`No PDFs found under RAG_SOURCE_DIR=${effectiveDir}`);
-        process.exit(1);
-      }
-      console.log(`No PDFs in ${DEFAULT_PDF_DIR}, falling back to PDF_PATH.`);
-      pdfFiles = null;
-    }
-
-    if (!pdfFiles && !fs.existsSync(PDF_PATH)) {
-      console.error(`PDF not found: ${PDF_PATH}`);
+    if (entries.length === 0) {
       console.error(
-        `Tip: add URLs to ${DEFAULT_SITES_TXT} or place PDFs in ${DEFAULT_PDF_DIR}/`
+        'No PDFs found. Set RAG_SOURCE_DIR or DEFAULT_PDF_DIR, or set PDF_PATH to a .pdf file or a folder of PDFs.'
+      );
+      console.error(
+        `Tip: add URLs to ${DEFAULT_SITES_TXT}, or use RAG_IGNORE_SITES_TXT=1 with local PDFs.`
       );
       process.exit(1);
     }
 
-    if (pdfFiles) {
-      const absSource = path.resolve(effectiveDir);
-      const fileRows = [];
-      for (const file of pdfFiles) {
-        const buffer = fs.readFileSync(file.abs);
-        const sha256 = crypto.createHash('sha256').update(buffer).digest('hex');
-        fileRows.push({
-          path: file.relPosix,
-          name: file.name,
-          sha256,
-          bytes: buffer.length
-        });
-        const baseMetadata = {
-          source: file.name,
-          path: file.relPosix,
-          sitePath: `/${file.relPosix}`
-        };
-        const mapped = siteUrlForRelative(file.relPosix);
-        if (mapped) baseMetadata.url = mapped;
-
-        const parsed = await pdf(buffer);
-        const part = chunkText(parsed.text, baseMetadata, idCounter);
-        chunks.push(...part);
-        console.log(`Parsed ${file.relPosix}: ${part.length} chunks`);
-      }
-      sourceSummary = {
-        type: 'directory',
-        path: absSource,
-        siteBaseUrl: SITE_BASE_URL || null,
-        fileCount: pdfFiles.length,
-        files: fileRows
-      };
-    } else {
-      const buffer = fs.readFileSync(PDF_PATH);
-      const sourceName = path.basename(PDF_PATH);
-      const sourceSha256 = crypto.createHash('sha256').update(buffer).digest('hex');
-      const relFromCwd = toPosix(path.relative(process.cwd(), path.resolve(PDF_PATH)));
-      const baseMetadata = {
-        source: sourceName,
-        path: relFromCwd,
-        sitePath: `/${relFromCwd}`
-      };
-      const mapped = siteUrlForRelative(relFromCwd);
-      if (mapped) baseMetadata.url = mapped;
-
-      const parsed = await pdf(buffer);
-      chunks.push(...chunkText(parsed.text, baseMetadata, idCounter));
-      sourceSummary = {
-        type: 'file',
-        path: path.resolve(PDF_PATH),
-        name: sourceName,
-        sha256: sourceSha256,
-        bytes: buffer.length,
-        siteBaseUrl: SITE_BASE_URL || null
-      };
-    }
+    const fileRows = await appendChunksFromPdfFileEntries(entries, idCounter, chunks, pdfPipelineRuns);
+    sourceSummary = buildPdfSourceSummary(fileRows, effectiveDir, usedPdfPathFallback);
   }
 
   fs.mkdirSync(path.dirname(OUT_PATH), { recursive: true });
+
+  for (let i = chunks.length - 1; i >= 0; i--) {
+    if (!(chunks[i].text || '').trim()) {
+      console.warn(`Dropping empty-text chunk ${chunks[i].id}`);
+      chunks.splice(i, 1);
+    }
+  }
 
   console.log(`Chunks: ${chunks.length}`);
   const batchSize = 50;
   for (let i = 0; i < chunks.length; i += batchSize) {
     const batch = chunks.slice(i, i + batchSize);
-    const vectors = await embedBatch(client, batch.map((c) => c.text));
+    const vectors = await embeddings.embedDocuments(batch.map((c) => c.text));
     batch.forEach((chunk, idx) => {
       chunk.embedding = vectors[idx];
     });
@@ -347,8 +476,25 @@ async function main() {
     embeddingModel: EMBEDDING_MODEL,
     chunking: {
       size: CHUNK_SIZE,
-      overlap: CHUNK_OVERLAP
+      overlap: CHUNK_OVERLAP,
+      splitter: 'RecursiveCharacterTextSplitter',
+      embeddings: 'OpenAIEmbeddings',
+      pdfLegacy: RAG_PDF_LEGACY
     },
+    ...(pdfPipelineRuns.length
+      ? {
+          pdfPipeline: {
+            version: 1,
+            legacy: RAG_PDF_LEGACY,
+            visionEnabled: RAG_PDF_VISION,
+            visionModel: RAG_VISION_MODEL,
+            maxFigures: RAG_PDF_MAX_FIGURES,
+            renderScale: RAG_PDF_RENDER_SCALE,
+            assetDir: 'public/rag-assets',
+            runs: pdfPipelineRuns
+          }
+        }
+      : {}),
     chunkCount: chunks.length,
     chunks
   };
@@ -358,6 +504,11 @@ async function main() {
     hint = `${sourceSummary.fileCount} files from ${sourceSummary.path}`;
   } else if (sourceSummary.type === 'urls') {
     hint = `${sourceSummary.fetchedCount}/${sourceSummary.urlCount} URLs from ${sourceSummary.listFile}`;
+  } else if (sourceSummary.type === 'urls_and_pdfs') {
+    const u = sourceSummary.urls;
+    const p = sourceSummary.pdfs;
+    const pdfHint = p.type === 'directory' ? `${p.fileCount} PDF(s) from ${p.path}` : p.name;
+    hint = `${u.fetchedCount}/${u.urlCount} URLs + ${pdfHint}`;
   } else {
     hint = `source sha256=${sourceSummary.sha256.slice(0, 12)}…`;
   }
