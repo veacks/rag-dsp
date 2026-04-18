@@ -1,0 +1,3 @@
+https://faust.grame.fr/
+https://faustdoc.grame.fr/
+https://faustlibraries.grame.fr/
