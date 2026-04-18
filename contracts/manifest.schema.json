@@ -1,0 +1,129 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://flowise-dsp-rag.local/schemas/manifest.schema.json",
+  "title": "flowise-dsp-rag export manifest",
+  "description": "Portable manifest for a standalone RAG export.",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "chunkCount",
+    "exportedAt",
+    "exportSource"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "builtAt": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "source": {
+      "type": [
+        "object",
+        "null"
+      ]
+    },
+    "embeddingModel": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Embedding model used to build vectors in chunks.jsonl."
+    },
+    "chunking": {
+      "type": [
+        "object",
+        "null"
+      ]
+    },
+    "chunkCount": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "exportedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "exportSource": {
+      "type": "string",
+      "description": "Absolute path to source rag.json used during export."
+    },
+    "retrievalProfiles": {
+      "type": "array",
+      "description": "Optional future extension for multi-embedding exports.",
+      "items": {
+        "$ref": "#/$defs/retrievalProfile"
+      }
+    },
+    "recommendedTopK": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "distanceMetric": {
+      "type": "string",
+      "enum": [
+        "cosine",
+        "dot",
+        "euclidean"
+      ]
+    }
+  },
+  "$defs": {
+    "retrievalProfile": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "id",
+        "embeddingProvider",
+        "embeddingModel",
+        "dimension",
+        "distanceMetric"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "examples": [
+            "openai-text-embedding-3-small"
+          ]
+        },
+        "embeddingProvider": {
+          "type": "string",
+          "examples": [
+            "openai"
+          ]
+        },
+        "embeddingModel": {
+          "type": "string"
+        },
+        "dimension": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "distanceMetric": {
+          "type": "string",
+          "enum": [
+            "cosine",
+            "dot",
+            "euclidean"
+          ]
+        },
+        "vectorsFile": {
+          "type": "string",
+          "description": "Relative path to vectors JSONL for this profile."
+        },
+        "queryCompatibility": {
+          "type": "string",
+          "description": "How query embeddings must be produced for this profile."
+        }
+      }
+    }
+  }
+}

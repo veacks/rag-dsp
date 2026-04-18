@@ -1,0 +1,10 @@
+# One YouTube URL per line. Used by `rager transcripts` / `npm run build:transcripts`.
+https://www.youtube.com/user/allsignalprocessing/
+https://www.youtube.com/channel/UCUR_LsXk7IYyueSnXcNextQ/
+https://www.youtube.com/watch?v=SrJq2AzXZME
+https://www.youtube.com/watch?v=WgJMjDh0nLU
+https://www.youtube.com/watch?v=hVOA8VtKLgk&list=PLuh62Q4Sv7BUSzx5Jr8Wrxxn-U10qG1et
+https://www.youtube.com/watch?v=6dFnpz_AEyA&list=PL9567DFCA3A66F299
+https://www.youtube.com/watch?v=spUNpyF58BY
+https://www.youtube.com/watch?v=iTMn0Kt18tg
+https://www.youtube.com/watch?v=tMV61BZCrhk
