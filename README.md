@@ -40,8 +40,8 @@ npm install
 
 **Sources (pick one path):**
 
-1. **URLs** — add one `http(s)` URL per line in `./sources/sites.txt` (lines starting with `#` are ignored). If this list has at least one valid URL, the build crawls those pages instead of PDFs (unless you set `RAG_IGNORE_SITES_TXT=1`).
-2. **PDFs** — put `*.pdf` files in `./pdf`, or set `RAG_SOURCE_DIR`. If there are no sites and no PDFs in the default folder, a single PDF can be set with `PDF_PATH` (default `./DesigningAudioEffectPlugins.pdf` if present).
+1. **URLs** — add one `http(s)` URL per line in `./sources/sites.txt` (lines starting with `#` are ignored). If this list has at least one valid URL, the build crawls those pages first (unless you set `RAG_IGNORE_SITES_TXT=1`).
+2. **Local course assets (PDF + MAT + notebooks)** — put `*.pdf`, optional `*.mat`, and `.ipynb` files in your source folder (`./pdf` by default, or `RAG_SOURCE_DIR`). Local assets are merged as one resource (`RAG_LOCAL_RESOURCE_NAME`, default `dsp-course-materials`).
 3. **Transcripts (optional merge)** — fetch YouTube transcripts from `./sources/youtube.txt` into `./sources/transcripts/youtube`, then `rager build` automatically merges those local text files (`RAG_MERGE_TRANSCRIPTS=1` by default).
 
 Useful variables are documented in `.env.example` (e.g. `CRAWL_DELAY_MS`, `SITE_BASE_URL`, `PDF_PATH`).

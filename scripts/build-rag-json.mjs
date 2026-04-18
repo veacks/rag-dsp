@@ -41,6 +41,8 @@ const EMBEDDING_MODEL = 'text-embedding-3-small';
 const CHUNK_SIZE = 1200;
 const CHUNK_OVERLAP = 200;
 const CRAWL_DELAY_MS = Math.max(0, Number(process.env.CRAWL_DELAY_MS || 400));
+const CRAWL_MAX_PAGES_PER_SITE = Math.max(1, Number(process.env.CRAWL_MAX_PAGES_PER_SITE || 300));
+const LOCAL_RESOURCE_NAME = (process.env.RAG_LOCAL_RESOURCE_NAME || 'dsp-course-materials').trim() || 'dsp-course-materials';
 
 const RAG_PDF_LEGACY = ['1', 'true', 'yes'].includes((process.env.RAG_PDF_LEGACY || '').toLowerCase());
 const RAG_PDF_VISION = ['1', 'true', 'yes'].includes((process.env.RAG_PDF_VISION || '').toLowerCase());
@@ -128,16 +130,53 @@ async function fetchUrlText(url) {
 
   if (buf.length >= 4 && buf.slice(0, 4).toString() === '%PDF') {
     const parsed = await pdf(buf);
-    return { text: parsed.text, bytes: buf.length, finalUrl, pdfBuffer: buf };
+    return { text: parsed.text, bytes: buf.length, finalUrl, pdfBuffer: buf, contentType: ct, html: null };
   }
   if (ct.includes('pdf')) {
     const parsed = await pdf(buf);
-    return { text: parsed.text, bytes: buf.length, finalUrl, pdfBuffer: buf };
+    return { text: parsed.text, bytes: buf.length, finalUrl, pdfBuffer: buf, contentType: ct, html: null };
   }
 
   const raw = buf.toString('utf8');
   const text = htmlToText(raw);
-  return { text, bytes: buf.length, finalUrl };
+  return { text, bytes: buf.length, finalUrl, contentType: ct, html: raw };
+}
+
+function normalizeCrawlCandidate(rawHref, baseUrl) {
+  if (!rawHref) return null;
+  const trimmed = rawHref.trim();
+  if (!trimmed) return null;
+  if (/^(javascript:|mailto:|tel:|data:)/i.test(trimmed)) return null;
+  try {
+    const u = new URL(trimmed, baseUrl);
+    if (u.protocol !== 'http:' && u.protocol !== 'https:') return null;
+    u.hash = '';
+    return u.href;
+  } catch {
+    return null;
+  }
+}
+
+function shouldSkipUrlByPathname(urlStr) {
+  const u = new URL(urlStr);
+  return /\.(?:css|js|mjs|cjs|map|json|xml|rss|atom|jpg|jpeg|png|gif|webp|svg|ico|woff2?|ttf|eot|zip|gz|bz2|xz|7z|tar|rar|mp3|wav|flac|ogg|mp4|avi|mov|webm)$/i.test(u.pathname);
+}
+
+function extractPageLinks(html, baseUrl, origin) {
+  if (!html) return [];
+  const links = new Set();
+  const re = /<a\b[^>]*\bhref\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]+))/gi;
+  let m;
+  while ((m = re.exec(html)) !== null) {
+    const candidate = m[1] || m[2] || m[3] || '';
+    const normalized = normalizeCrawlCandidate(candidate, baseUrl);
+    if (!normalized) continue;
+    const u = new URL(normalized);
+    if (u.origin !== origin) continue;
+    if (shouldSkipUrlByPathname(u.href)) continue;
+    links.add(u.href);
+  }
+  return [...links];
 }
 
 function walkFiles(dir) {
@@ -181,6 +220,50 @@ function listPdfFiles(rootDir) {
       };
     })
     .sort((a, b) => a.relPosix.localeCompare(b.relPosix, 'en'));
+}
+
+function listMatFiles(rootDir) {
+  const absRoot = path.resolve(rootDir);
+  if (!fs.existsSync(absRoot) || !fs.statSync(absRoot).isDirectory()) {
+    return [];
+  }
+  return walkFiles(absRoot)
+    .filter((f) => f.toLowerCase().endsWith('.mat'))
+    .map((abs) => {
+      const rel = path.relative(absRoot, abs);
+      const relPosix = toPosix(rel);
+      return {
+        abs,
+        relPosix,
+        name: path.basename(abs)
+      };
+    })
+    .sort((a, b) => a.relPosix.localeCompare(b.relPosix, 'en'));
+}
+
+function listIpynbFiles(rootDir) {
+  const absRoot = path.resolve(rootDir);
+  if (!fs.existsSync(absRoot) || !fs.statSync(absRoot).isDirectory()) {
+    return [];
+  }
+  return walkFiles(absRoot)
+    .filter((f) => f.toLowerCase().endsWith('.ipynb'))
+    .map((abs) => {
+      const rel = path.relative(absRoot, abs);
+      const relPosix = toPosix(rel);
+      return {
+        abs,
+        relPosix,
+        name: path.basename(abs)
+      };
+    })
+    .sort((a, b) => a.relPosix.localeCompare(b.relPosix, 'en'));
+}
+
+function normalizeNotebookSource(source) {
+  if (Array.isArray(source)) return source.join('');
+  if (typeof source === 'string') return source;
+  return '';
 }
 
 async function pdfBufferToChunks(buffer, ctx) {
@@ -250,10 +333,10 @@ function shouldMergeLocalPdfsAfterCrawl() {
 }
 
 /**
- * Discover *.pdf under RAG_SOURCE_DIR / DEFAULT_PDF_DIR, then under PDF_PATH if it is a directory or a single file.
- * @returns {{ entries: { abs: string, relPosix: string, name: string }[], envSourceDir: string, effectiveDir: string, usedPdfPathFallback: boolean }}
+ * Discover local course files under RAG_SOURCE_DIR / DEFAULT_PDF_DIR, then under PDF_PATH if it is a directory or a single file.
+ * Includes PDFs, MAT files, and Jupyter notebooks.
  */
-function resolveLocalPdfFileEntries() {
+function resolveLocalCourseFileEntries() {
   const envSourceDir = (process.env.RAG_SOURCE_DIR || process.env.SOURCE_DIR || '').trim();
   let effectiveDir = '';
   if (envSourceDir) {
@@ -265,18 +348,22 @@ function resolveLocalPdfFileEntries() {
     }
   }
 
-  let entries = effectiveDir ? listPdfFiles(effectiveDir) : [];
+  let pdfEntries = effectiveDir ? listPdfFiles(effectiveDir) : [];
+  let matEntries = effectiveDir ? listMatFiles(effectiveDir) : [];
+  let ipynbEntries = effectiveDir ? listIpynbFiles(effectiveDir) : [];
   let usedPdfPathFallback = false;
 
-  if (entries.length === 0) {
+  if (pdfEntries.length === 0 && matEntries.length === 0 && ipynbEntries.length === 0) {
     const resolved = path.resolve(PDF_PATH);
     if (fs.existsSync(resolved)) {
       const st = fs.statSync(resolved);
       if (st.isDirectory()) {
-        entries = listPdfFiles(PDF_PATH);
-        usedPdfPathFallback = entries.length > 0;
+        pdfEntries = listPdfFiles(PDF_PATH);
+        matEntries = listMatFiles(PDF_PATH);
+        ipynbEntries = listIpynbFiles(PDF_PATH);
+        usedPdfPathFallback = pdfEntries.length > 0 || matEntries.length > 0 || ipynbEntries.length > 0;
       } else {
-        entries = [
+        pdfEntries = [
           {
             abs: resolved,
             relPosix: toPosix(path.relative(process.cwd(), resolved)),
@@ -288,7 +375,7 @@ function resolveLocalPdfFileEntries() {
     }
   }
 
-  return { entries, envSourceDir, effectiveDir, usedPdfPathFallback };
+  return { pdfEntries, matEntries, ipynbEntries, envSourceDir, effectiveDir, usedPdfPathFallback };
 }
 
 async function appendChunksFromPdfFileEntries(fileEntries, idCounter, chunks, pdfPipelineRuns) {
@@ -303,7 +390,9 @@ async function appendChunksFromPdfFileEntries(fileEntries, idCounter, chunks, pd
       bytes: buffer.length
     });
     const baseMetadata = {
-      source: file.name,
+      source: LOCAL_RESOURCE_NAME,
+      document: file.name,
+      resourceType: 'course_materials',
       path: file.relPosix,
       sitePath: `/${file.relPosix}`
     };
@@ -319,6 +408,127 @@ async function appendChunksFromPdfFileEntries(fileEntries, idCounter, chunks, pd
     chunks.push(...out.chunks);
     if (out.pdfPipeline) pdfPipelineRuns.push({ path: file.relPosix, ...out.pdfPipeline });
     console.log(`Parsed ${file.relPosix}: ${out.chunks.length} chunks`);
+  }
+  return fileRows;
+}
+
+function detectMatFormat(buffer) {
+  if (buffer.length >= 8) {
+    const hdf5Sig = Buffer.from([0x89, 0x48, 0x44, 0x46, 0x0d, 0x0a, 0x1a, 0x0a]);
+    if (buffer.subarray(0, 8).equals(hdf5Sig)) return 'mat-v7.3-hdf5';
+  }
+  const header = buffer.subarray(0, 128).toString('latin1');
+  if (header.includes('MATLAB 5.0 MAT-file')) return 'mat-v5';
+  if (header.toLowerCase().includes('matlab')) return 'mat-legacy';
+  return 'unknown';
+}
+
+async function appendChunksFromMatFileEntries(fileEntries, idCounter, chunks) {
+  const fileRows = [];
+  for (const file of fileEntries) {
+    const buffer = fs.readFileSync(file.abs);
+    const sha256 = crypto.createHash('sha256').update(buffer).digest('hex');
+    const format = detectMatFormat(buffer);
+    fileRows.push({
+      path: file.relPosix,
+      name: file.name,
+      sha256,
+      bytes: buffer.length,
+      format
+    });
+    const summary = [
+      `MATLAB data file: ${file.name}`,
+      `Relative path: ${file.relPosix}`,
+      `Detected format: ${format}`,
+      `Byte size: ${buffer.length}`,
+      `SHA256: ${sha256}`,
+      'Note: binary MAT payload is indexed as a metadata summary.'
+    ].join('\n');
+    const baseMetadata = {
+      source: LOCAL_RESOURCE_NAME,
+      document: file.name,
+      resourceType: 'course_materials',
+      contentType: 'mat',
+      matFormat: format,
+      path: file.relPosix,
+      sitePath: `/${file.relPosix}`
+    };
+    const part = await chunkText(summary, baseMetadata, idCounter, 500, 50);
+    chunks.push(...part);
+    console.log(`Indexed MAT ${file.relPosix}: ${part.length} chunk(s)`);
+  }
+  return fileRows;
+}
+
+async function appendChunksFromNotebookFileEntries(fileEntries, idCounter, chunks) {
+  const fileRows = [];
+  for (const file of fileEntries) {
+    const raw = fs.readFileSync(file.abs, 'utf8');
+    const sha256 = crypto.createHash('sha256').update(raw).digest('hex');
+    let notebook;
+    try {
+      notebook = JSON.parse(raw);
+    } catch {
+      console.warn(`Skip invalid notebook JSON: ${file.relPosix}`);
+      continue;
+    }
+    const cells = Array.isArray(notebook?.cells) ? notebook.cells : [];
+    let markdownCells = 0;
+    let codeCells = 0;
+    let outputCount = 0;
+    const blocks = [];
+    for (const cell of cells) {
+      const t = String(cell?.cell_type || '').toLowerCase();
+      const cellText = normalizeNotebookSource(cell?.source).trim();
+      if (t === 'markdown') {
+        markdownCells += 1;
+        if (cellText) blocks.push(`Markdown Cell:\n${cellText}`);
+        continue;
+      }
+      if (t !== 'code') continue;
+      codeCells += 1;
+      if (cellText) blocks.push(`Code Cell:\n${cellText}`);
+      const outs = Array.isArray(cell?.outputs) ? cell.outputs : [];
+      for (const out of outs) {
+        const parts = [];
+        const txt = normalizeNotebookSource(out?.text).trim();
+        if (txt) parts.push(txt);
+        if (out?.data && typeof out.data === 'object') {
+          const plain = normalizeNotebookSource(out.data['text/plain']).trim();
+          if (plain) parts.push(plain);
+        }
+        if (parts.length) {
+          outputCount += 1;
+          blocks.push(`Output:\n${parts.join('\n')}`);
+        }
+      }
+    }
+    const combined = blocks.join('\n\n').trim();
+    fileRows.push({
+      path: file.relPosix,
+      name: file.name,
+      sha256,
+      bytes: Buffer.byteLength(raw),
+      cells: cells.length,
+      markdownCells,
+      codeCells,
+      outputs: outputCount
+    });
+    if (!combined) {
+      console.log(`Indexed notebook ${file.relPosix}: 0 chunks (no textual cells/outputs)`);
+      continue;
+    }
+    const baseMetadata = {
+      source: LOCAL_RESOURCE_NAME,
+      document: file.name,
+      resourceType: 'course_materials',
+      contentType: 'ipynb',
+      path: file.relPosix,
+      sitePath: `/${file.relPosix}`
+    };
+    const part = await chunkText(combined, baseMetadata, idCounter);
+    chunks.push(...part);
+    console.log(`Indexed notebook ${file.relPosix}: ${part.length} chunk(s)`);
   }
   return fileRows;
 }
@@ -374,6 +584,9 @@ function buildSourceHint(sourceSummary) {
   if (sourceSummary.type === 'directory') {
     return `${sourceSummary.fileCount} files from ${sourceSummary.path}`;
   }
+  if (sourceSummary.type === 'course_directory') {
+    return `${sourceSummary.pdfCount} PDF(s) + ${sourceSummary.matCount} MAT file(s) + ${sourceSummary.ipynbCount} notebook(s) from ${sourceSummary.path}`;
+  }
   if (sourceSummary.type === 'urls') {
     return `${sourceSummary.fetchedCount}/${sourceSummary.urlCount} URLs from ${sourceSummary.listFile}`;
   }
@@ -383,6 +596,11 @@ function buildSourceHint(sourceSummary) {
     const pdfHint = p.type === 'directory' ? `${p.fileCount} PDF(s) from ${p.path}` : p.name;
     return `${u.fetchedCount}/${u.urlCount} URLs + ${pdfHint}`;
   }
+  if (sourceSummary.type === 'urls_and_course_assets') {
+    const u = sourceSummary.urls;
+    const c = sourceSummary.courseAssets;
+    return `${u.fetchedCount}/${u.urlCount} URLs + ${c.pdfCount} PDF(s) + ${c.matCount} MAT file(s) + ${c.ipynbCount} notebook(s) from ${c.path}`;
+  }
   if (sourceSummary.type === 'with_transcripts') {
     const baseHint = buildSourceHint(sourceSummary.base);
     const t = sourceSummary.transcripts;
@@ -391,32 +609,40 @@ function buildSourceHint(sourceSummary) {
   return `source sha256=${sourceSummary.sha256.slice(0, 12)}…`;
 }
 
-function buildPdfSourceSummary(fileRows, effectiveDir, usedPdfPathFallback) {
+function buildLocalCourseSourceSummary(pdfRows, matRows, ipynbRows, effectiveDir, usedPdfPathFallback) {
   const pdfPathResolved = path.resolve(PDF_PATH);
   const singleFileFromPdfPath =
-    fileRows.length === 1 &&
+    pdfRows.length === 1 &&
+    matRows.length === 0 &&
+    ipynbRows.length === 0 &&
     !effectiveDir &&
     usedPdfPathFallback &&
     fs.existsSync(pdfPathResolved) &&
     fs.statSync(pdfPathResolved).isFile();
   if (singleFileFromPdfPath) {
-    const r = fileRows[0];
+    const r = pdfRows[0];
     return {
       type: 'file',
       path: pdfPathResolved,
       name: r.name,
       sha256: r.sha256,
       bytes: r.bytes,
+      resourceName: LOCAL_RESOURCE_NAME,
       siteBaseUrl: SITE_BASE_URL || null
     };
   }
   const absSource = effectiveDir ? path.resolve(effectiveDir) : pdfPathResolved;
   return {
-    type: 'directory',
+    type: 'course_directory',
     path: absSource,
+    resourceName: LOCAL_RESOURCE_NAME,
     siteBaseUrl: SITE_BASE_URL || null,
-    fileCount: fileRows.length,
-    files: fileRows
+    pdfCount: pdfRows.length,
+    matCount: matRows.length,
+    ipynbCount: ipynbRows.length,
+    files: pdfRows,
+    matFiles: matRows,
+    notebookFiles: ipynbRows
   };
 }
 
@@ -447,40 +673,78 @@ async function main() {
   if (crawlUrls.length > 0) {
     console.log(`Crawl mode: ${crawlUrls.length} URL(s) from ${path.resolve(sitesTxtPath)}`);
     const fetched = [];
+    const seen = new Set();
+    let pagesScanned = 0;
     for (let i = 0; i < crawlUrls.length; i++) {
-      const url = crawlUrls[i];
-      if (i > 0 && CRAWL_DELAY_MS) await sleep(CRAWL_DELAY_MS);
-      try {
-        const { text, bytes, finalUrl, pdfBuffer } = await fetchUrlText(url);
-        if (!text || text.length < 20) {
-          console.warn(`Skip (empty or tiny body): ${finalUrl}`);
-          continue;
+      const seedUrl = crawlUrls[i];
+      const seedOrigin = new URL(seedUrl).origin;
+      const queue = [seedUrl];
+      const queued = new Set([seedUrl]);
+      let pagesForSeed = 0;
+
+      while (queue.length > 0 && pagesForSeed < CRAWL_MAX_PAGES_PER_SITE) {
+        const requestedUrl = queue.shift();
+        if (!requestedUrl || seen.has(requestedUrl)) continue;
+        if (pagesScanned > 0 && CRAWL_DELAY_MS) await sleep(CRAWL_DELAY_MS);
+
+        seen.add(requestedUrl);
+        queued.delete(requestedUrl);
+        pagesScanned += 1;
+        pagesForSeed += 1;
+
+        try {
+          const { text, bytes, finalUrl, pdfBuffer, contentType, html } = await fetchUrlText(requestedUrl);
+          const normalizedFinal = normalizeCrawlCandidate(finalUrl, requestedUrl) || finalUrl;
+          const finalObj = new URL(normalizedFinal);
+          if (finalObj.origin !== seedOrigin) {
+            console.warn(`Skip cross-origin redirect: ${requestedUrl} -> ${normalizedFinal}`);
+            continue;
+          }
+
+          if (!seen.has(normalizedFinal)) seen.add(normalizedFinal);
+          if (!text || text.length < 20) {
+            console.warn(`Skip (empty or tiny body): ${normalizedFinal}`);
+          } else {
+            const sha256 = crypto
+              .createHash('sha256')
+              .update(pdfBuffer || text)
+              .digest('hex');
+            fetched.push({ url: normalizedFinal, requested: requestedUrl, bytes, sha256 });
+            const baseMetadata = metadataFromFetchedUrl(normalizedFinal);
+            let part;
+            if (pdfBuffer) {
+              const relPosix = toPosix(finalObj.pathname.replace(/^\/+/, '') || 'remote.pdf');
+              const out = await pdfBufferToChunks(pdfBuffer, {
+                relPosix,
+                baseMetadata,
+                idCounter,
+                fileSha256: sha256
+              });
+              part = out.chunks;
+              if (out.pdfPipeline) pdfPipelineRuns.push({ path: relPosix, url: normalizedFinal, ...out.pdfPipeline });
+            } else {
+              part = await chunkText(text, baseMetadata, idCounter);
+            }
+            chunks.push(...part);
+            console.log(`Fetched ${normalizedFinal}: ${part.length} chunk(s), ${text.length} chars`);
+          }
+
+          const isHtml = (contentType || '').includes('html');
+          if (isHtml && html) {
+            const discovered = extractPageLinks(html, normalizedFinal, seedOrigin);
+            for (const link of discovered) {
+              if (!seen.has(link) && !queued.has(link)) {
+                queue.push(link);
+                queued.add(link);
+              }
+            }
+          }
+        } catch (e) {
+          console.warn(`Skip ${requestedUrl}: ${e instanceof Error ? e.message : e}`);
         }
-        const sha256 = crypto
-          .createHash('sha256')
-          .update(pdfBuffer || text)
-          .digest('hex');
-        fetched.push({ url: finalUrl, requested: url, bytes, sha256 });
-        const baseMetadata = metadataFromFetchedUrl(finalUrl);
-        let part;
-        if (pdfBuffer) {
-          const u = new URL(finalUrl);
-          const relPosix = toPosix(u.pathname.replace(/^\/+/, '') || 'remote.pdf');
-          const out = await pdfBufferToChunks(pdfBuffer, {
-            relPosix,
-            baseMetadata,
-            idCounter,
-            fileSha256: sha256
-          });
-          part = out.chunks;
-          if (out.pdfPipeline) pdfPipelineRuns.push({ path: relPosix, url: finalUrl, ...out.pdfPipeline });
-        } else {
-          part = await chunkText(text, baseMetadata, idCounter);
-        }
-        chunks.push(...part);
-        console.log(`Fetched ${finalUrl}: ${part.length} chunk(s), ${text.length} chars`);
-      } catch (e) {
-        console.warn(`Skip ${url}: ${e instanceof Error ? e.message : e}`);
+      }
+      if (pagesForSeed >= CRAWL_MAX_PAGES_PER_SITE && queue.length > 0) {
+        console.warn(`Reached CRAWL_MAX_PAGES_PER_SITE=${CRAWL_MAX_PAGES_PER_SITE} for seed ${seedUrl}; increase env var to crawl deeper.`);
       }
     }
     if (chunks.length === 0) {
@@ -491,6 +755,7 @@ async function main() {
       type: 'urls',
       listFile: path.resolve(sitesTxtPath),
       urlCount: crawlUrls.length,
+      crawledPageCount: fetched.length,
       fetchedCount: fetched.length,
       siteBaseUrl: SITE_BASE_URL || null,
       fetched
@@ -498,19 +763,21 @@ async function main() {
     sourceSummary = crawlSourceSummary;
 
     if (shouldMergeLocalPdfsAfterCrawl()) {
-      const { entries, effectiveDir, usedPdfPathFallback } = resolveLocalPdfFileEntries();
-      if (entries.length > 0) {
+      const { pdfEntries, matEntries, ipynbEntries, effectiveDir, usedPdfPathFallback } = resolveLocalCourseFileEntries();
+      if (pdfEntries.length > 0 || matEntries.length > 0 || ipynbEntries.length > 0) {
         const label = effectiveDir
           ? path.resolve(effectiveDir)
           : usedPdfPathFallback
             ? path.resolve(PDF_PATH)
             : 'local';
-        console.log(`Merging ${entries.length} local PDF(s) after crawl (${label})`);
-        const fileRows = await appendChunksFromPdfFileEntries(entries, idCounter, chunks, pdfPipelineRuns);
+        console.log(`Merging ${pdfEntries.length} local PDF(s), ${matEntries.length} MAT file(s), and ${ipynbEntries.length} notebook(s) after crawl (${label})`);
+        const fileRows = await appendChunksFromPdfFileEntries(pdfEntries, idCounter, chunks, pdfPipelineRuns);
+        const matRows = await appendChunksFromMatFileEntries(matEntries, idCounter, chunks);
+        const ipynbRows = await appendChunksFromNotebookFileEntries(ipynbEntries, idCounter, chunks);
         sourceSummary = {
-          type: 'urls_and_pdfs',
+          type: 'urls_and_course_assets',
           urls: crawlSourceSummary,
-          pdfs: buildPdfSourceSummary(fileRows, effectiveDir, usedPdfPathFallback)
+          courseAssets: buildLocalCourseSourceSummary(fileRows, matRows, ipynbRows, effectiveDir, usedPdfPathFallback)
         };
       }
     }
@@ -529,20 +796,22 @@ async function main() {
       }
     }
   } else {
-    const { entries, effectiveDir, usedPdfPathFallback } = resolveLocalPdfFileEntries();
+    const { pdfEntries, matEntries, ipynbEntries, effectiveDir, usedPdfPathFallback } = resolveLocalCourseFileEntries();
 
-    if (entries.length === 0) {
+    if (pdfEntries.length === 0 && matEntries.length === 0 && ipynbEntries.length === 0) {
       console.error(
-        'No PDFs found. Set RAG_SOURCE_DIR or DEFAULT_PDF_DIR, or set PDF_PATH to a .pdf file or a folder of PDFs.'
+        'No local course assets found. Set RAG_SOURCE_DIR or DEFAULT_PDF_DIR, or set PDF_PATH to a .pdf file/folder containing PDFs, MAT, or .ipynb files.'
       );
       console.error(
-        `Tip: add URLs to ${DEFAULT_SITES_TXT}, or use RAG_IGNORE_SITES_TXT=1 with local PDFs.`
+        `Tip: add URLs to ${DEFAULT_SITES_TXT}, or use RAG_IGNORE_SITES_TXT=1 with local course assets.`
       );
       process.exit(1);
     }
 
-    const fileRows = await appendChunksFromPdfFileEntries(entries, idCounter, chunks, pdfPipelineRuns);
-    sourceSummary = buildPdfSourceSummary(fileRows, effectiveDir, usedPdfPathFallback);
+    const fileRows = await appendChunksFromPdfFileEntries(pdfEntries, idCounter, chunks, pdfPipelineRuns);
+    const matRows = await appendChunksFromMatFileEntries(matEntries, idCounter, chunks);
+    const ipynbRows = await appendChunksFromNotebookFileEntries(ipynbEntries, idCounter, chunks);
+    sourceSummary = buildLocalCourseSourceSummary(fileRows, matRows, ipynbRows, effectiveDir, usedPdfPathFallback);
 
     if (shouldMergeLocalTranscripts()) {
       const { dir, entries: transcriptEntries } = resolveTranscriptFileEntries();
