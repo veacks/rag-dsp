@@ -1,23 +1,45 @@
 {
   "name": "flowise-dsp-rag",
   "version": "1.0.0",
-  "main": "index.js",
-  "scripts": {
-    "start": "flowise start",
-    "build:rag": "node build-rag-json.mjs",
-    "export:vectors": "node export-vector-db.mjs",
-    "upsert:flowise": "node upsert-flowise.mjs",
-    "serve:rag": "npx --yes serve public -p 3333",
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "description": "Build OpenAI-embedded RAG indices, export vectors, upsert to Flowise, and browse chunks locally.",
+  "type": "module",
+  "bin": {
+    "rager": "./bin/rager.mjs"
   },
+  "files": [
+    "bin",
+    "scripts",
+    "public",
+    "rag-chat-flow",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "start": "node bin/rager.mjs flowise",
+    "build:rag": "node bin/rager.mjs build",
+    "export:vectors": "node bin/rager.mjs export",
+    "upsert:flowise": "node bin/rager.mjs upsert",
+    "serve:rag": "node bin/rager.mjs serve"
+  },
+  "keywords": [
+    "rag",
+    "flowise",
+    "openai",
+    "embeddings",
+    "vector",
+    "pdf",
+    "cli"
+  ],
   "author": "",
   "license": "ISC",
-  "description": "",
   "dependencies": {
     "dotenv": "^16.6.1",
     "flowise": "^3.1.2",
     "openai": "^4.104.0",
     "pdf-lib": "^1.17.1",
-    "pdf-parse": "^1.1.1"
+    "pdf-parse": "^1.1.1",
+    "serve": "^14.2.4"
   }
 }
