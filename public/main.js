@@ -3,6 +3,7 @@ const askBtn = document.getElementById('askBtn');
 const questionEl = document.getElementById('question');
 
 let ragData = [];
+let ragMeta = null;
 
 function cosineSimilarity(a, b) {
   let dot = 0;
@@ -32,8 +33,29 @@ async function loadRagData() {
     resultsEl.textContent = `Could not load rag.json (${res.status}). Run: npm run build:rag`;
     return;
   }
-  ragData = await res.json();
-  resultsEl.textContent = `Loaded ${ragData.length} chunks`;
+  const raw = await res.json();
+  if (Array.isArray(raw)) {
+    ragData = raw;
+    ragMeta = null;
+  } else {
+    ragData = raw.chunks ?? [];
+    ragMeta = raw;
+  }
+  const ver =
+    ragMeta?.schemaVersion != null
+      ? ` schema v${ragMeta.schemaVersion}`
+      : '';
+  const built = ragMeta?.builtAt ? ` · built ${ragMeta.builtAt}` : '';
+  const src = (() => {
+    const s = ragMeta?.source;
+    if (!s) return '';
+    if (s.type === 'urls' && s.fetchedCount != null) {
+      return ` · ${s.fetchedCount} URL(s) from list`;
+    }
+    if (s.sha256) return ` · source ${s.sha256.slice(0, 12)}…`;
+    return '';
+  })();
+  resultsEl.textContent = `Loaded ${ragData.length} chunks${ver}${built}${src}`;
 }
 
 async function search(question, topK = 5) {
@@ -56,12 +78,16 @@ askBtn.addEventListener('click', async () => {
   const top = await search(question, 5);
   resultsEl.textContent = top
     .map((r, i) => {
-      return [
+      const meta = r.metadata || {};
+      const lines = [
         `#${i + 1} score=${r.score.toFixed(4)}`,
-        `source=${r.metadata?.source || ''}`,
-        r.text.slice(0, 800),
-        ''
-      ].join('\n');
+        `source=${meta.source || ''}`
+      ];
+      if (meta.path) lines.push(`path=${meta.path}`);
+      if (meta.sitePath) lines.push(`sitePath=${meta.sitePath}`);
+      if (meta.url) lines.push(`url=${meta.url}`);
+      lines.push(r.text.slice(0, 800), '');
+      return lines.join('\n');
     })
     .join('\n----------------------\n');
 });

@@ -9,6 +9,9 @@ node_modules/
 # Generated RAG output
 public/rag.json
 
+# Portable vector export (manifest + jsonl)
+export/
+
 # Logs & debug
 logs/
 *.log
