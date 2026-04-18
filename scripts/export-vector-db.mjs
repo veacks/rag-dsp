@@ -18,7 +18,7 @@ function parseArgs(argv) {
     } else if (a === '--vectors-only') {
       vectorsOnly = true;
     } else if (a === '--help' || a === '-h') {
-      console.log(`Usage: node export-vector-db.mjs [options]
+      console.log(`Usage: rager export [options]   (or: node scripts/export-vector-db.mjs [options])
 
 Reads ${DEFAULT_RAG} (or RAG_PATH) and writes a portable vector export:
 
@@ -60,7 +60,7 @@ function main() {
 
   if (!fs.existsSync(ragPath)) {
     console.error(`RAG file not found: ${ragPath}`);
-    console.error('Run: npm run build:rag');
+    console.error('Run: rager build (or npm run build:rag)');
     process.exit(1);
   }
 

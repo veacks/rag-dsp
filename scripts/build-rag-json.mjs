@@ -13,7 +13,7 @@ const require = createRequire(import.meta.url);
 const pdf = require('pdf-parse');
 
 const PDF_PATH = process.env.PDF_PATH || './DesigningAudioEffectPlugins.pdf';
-/** Default folder in the repo for PDFs (`npm run build:rag` uses it when it contains at least one `*.pdf`). */
+/** Default folder in the repo for PDFs (`rager build` / `npm run build:rag` uses it when it contains at least one `*.pdf`). */
 const DEFAULT_PDF_DIR = './pdf';
 /** One URL per line; `#` starts a comment. If non-empty, crawl runs instead of PDFs (unless RAG_IGNORE_SITES_TXT). */
 const DEFAULT_SITES_TXT = './sources/sites.txt';

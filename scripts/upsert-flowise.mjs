@@ -16,13 +16,14 @@ import { PDFDocument, StandardFonts, rgb } from 'pdf-lib';
 import 'dotenv/config';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const repoRoot = path.resolve(__dirname, '..');
 
 const RAG_PATH = process.env.RAG_PATH || './public/rag.json';
 const FLOWISE_BASE_URL = (process.env.FLOWISE_BASE_URL || 'http://127.0.0.1:3000').replace(/\/$/, '');
 const FLOWISE_CHATFLOW_ID = process.env.FLOWISE_CHATFLOW_ID || '';
 const FLOWISE_API_KEY = process.env.FLOWISE_API_KEY || '';
 const FLOWISE_FLOW_JSON =
-  process.env.FLOWISE_FLOW_JSON || path.join(__dirname, 'rag-chat-flow', 'rag-dsp-chatlow.json');
+  process.env.FLOWISE_FLOW_JSON || path.join(repoRoot, 'rag-chat-flow', 'rag-dsp-chatlow.json');
 const FLOWISE_STOP_NODE_ID = process.env.FLOWISE_STOP_NODE_ID || '';
 
 function loadRag(filePath) {
@@ -125,7 +126,7 @@ async function main() {
     process.exit(1);
   }
   if (!fs.existsSync(RAG_PATH)) {
-    console.error(`RAG file not found: ${RAG_PATH} — run: npm run build:rag`);
+    console.error(`RAG file not found: ${RAG_PATH} — run: rager build (or npm run build:rag)`);
     process.exit(1);
   }
 
