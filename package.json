@@ -1,0 +1,20 @@
+{
+  "name": "flowise-dsp-rag",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "flowise start",
+    "build:rag": "node build-rag-json.mjs",
+    "serve:rag": "npx --yes serve public -p 3333",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "dotenv": "^16.6.1",
+    "flowise": "^3.1.2",
+    "openai": "^4.104.0",
+    "pdf-parse": "^1.1.1"
+  }
+}
