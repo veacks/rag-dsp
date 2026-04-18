@@ -17,6 +17,7 @@ Commands:
 | Command | Purpose |
 |--------|---------|
 | `rager build` | Build `public/rag.json` |
+| `rager transcripts` | Fetch YouTube transcripts into `sources/transcripts/youtube` |
 | `rager export` | Export manifest + JSONL (`rager export --help`) |
 | `rager upsert` | Upsert chunks to Flowise |
 | `rager serve` | Static server (default: `public` on port **3333**) |
@@ -41,10 +42,12 @@ npm install
 
 1. **URLs** — add one `http(s)` URL per line in `./sources/sites.txt` (lines starting with `#` are ignored). If this list has at least one valid URL, the build crawls those pages instead of PDFs (unless you set `RAG_IGNORE_SITES_TXT=1`).
 2. **PDFs** — put `*.pdf` files in `./pdf`, or set `RAG_SOURCE_DIR`. If there are no sites and no PDFs in the default folder, a single PDF can be set with `PDF_PATH` (default `./DesigningAudioEffectPlugins.pdf` if present).
+3. **Transcripts (optional merge)** — fetch YouTube transcripts from `./sources/youtube.txt` into `./sources/transcripts/youtube`, then `rager build` automatically merges those local text files (`RAG_MERGE_TRANSCRIPTS=1` by default).
 
 Useful variables are documented in `.env.example` (e.g. `CRAWL_DELAY_MS`, `SITE_BASE_URL`, `PDF_PATH`).
 
 ```bash
+rager transcripts   # optional: build local transcript text files first
 rager build
 # or: npm run build:rag
 ```
@@ -59,6 +62,45 @@ rager export
 # Defaults: RAG_PATH=./public/rag.json, EXPORT_DIR=./export/vector-db
 # See: rager export --help
 ```
+
+SQLite + vector export (`sqlite-vec` compatible):
+
+```bash
+rager export --sqlite
+# writes ./export/vector-db/sqlite/{schema.sql,data.sql,manifest.json,README.md}
+```
+
+Data + skills export (skill name from `sources/rag-settings.json`):
+
+```bash
+rager export --sqlite --with-skills
+# writes ./export/vector-db/skills/<target>/<skill-name>/SKILL.md
+```
+
+Skill naming options:
+
+- Default: `skill.name` in `sources/rag-settings.json`
+- Override from CLI: `rager export --with-skills --skill-name my-skill`
+
+Export every skill inside the repo `skills/` folder:
+
+```bash
+rager export --all-skills
+# or with a custom folder:
+rager export --all-skills --skills-dir ./some/skills
+```
+
+Browser WASM export (Web Worker + SQLite WASM loader + OPFS + frontend API):
+
+```bash
+rager export --wasm
+# writes ./export/vector-db/web/{rag-sqlite.worker.js,rag-api.js,rows.jsonl,manifest.json}
+```
+
+Standalone integration contracts:
+
+- `contracts/manifest.schema.json` — validation schema for exported `manifest.json`
+- `contracts/standalone-rag-api.md` — minimal `/search` and `/chat` API contract for plugging into Cursor, Codex, Claude, or custom clients
 
 ## Flowise
 
@@ -95,6 +137,7 @@ These call **`rager`** under the hood (`rager build`, `rager export`, etc.):
 |--------|---------|
 | `npm start` | Start Flowise (`rager flowise`) |
 | `npm run build:rag` | Generate `public/rag.json` from configured sources |
+| `npm run build:transcripts` | Fetch YouTube transcripts from `sources/youtube.txt` |
 | `npm run export:vectors` | Export `manifest.json` + `chunks.jsonl` (and optional `vectors.jsonl`) |
 | `npm run upsert:flowise` | POST RAG chunks to Flowise vector upsert API |
 | `npm run serve:rag` | Static server for `public/` on port 3333 |

@@ -72,6 +72,7 @@ Usage:
 
 Commands:
   build              Build public/rag.json from PDFs or crawled sources (embeddings)
+  transcripts        Fetch YouTube transcripts into local text files
   export             Export manifest + JSONL (see: rager export --help)
   upsert             POST RAG chunks to Flowise vector upsert API
   serve [args]       Static file server (default: public -p 3333; extra args passed to serve)
@@ -85,6 +86,7 @@ Options:
 
 Examples:
   rager build
+  rager transcripts
   rager export --out ./export/vector-db
   rager upsert
   rager serve
@@ -114,6 +116,9 @@ async function main() {
   switch (first) {
     case 'build':
       await runNode('build-rag-json.mjs', rest);
+      break;
+    case 'transcripts':
+      await runNode('fetch-youtube-transcripts.mjs', rest);
       break;
     case 'export':
       await runNode('export-vector-db.mjs', rest);

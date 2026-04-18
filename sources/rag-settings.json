@@ -1,0 +1,7 @@
+{
+  "skill": {
+    "name": "dsp-rag-assistant",
+    "description": "Grounded assistant for exported DSP RAG content.",
+    "targets": ["cursor", "claude", "codex"]
+  }
+}

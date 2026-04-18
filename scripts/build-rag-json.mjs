@@ -32,6 +32,7 @@ function normalizedDefaultPdfDir() {
 const DEFAULT_PDF_DIR = normalizedDefaultPdfDir();
 /** One URL per line; `#` starts a comment. If non-empty, crawl runs instead of PDFs (unless RAG_IGNORE_SITES_TXT). */
 const DEFAULT_SITES_TXT = './sources/sites.txt';
+const DEFAULT_TRANSCRIPTS_DIR = './sources/transcripts';
 /** Public site origin for chunk links, e.g. `https://docs.example.com` (no trailing slash required). */
 const SITE_BASE_URL = (process.env.SITE_BASE_URL || '').replace(/\/$/, '');
 
@@ -148,6 +149,19 @@ function walkFiles(dir) {
     else out.push(full);
   }
   return out;
+}
+
+function listTextFiles(rootDir) {
+  const absRoot = path.resolve(rootDir);
+  if (!fs.existsSync(absRoot) || !fs.statSync(absRoot).isDirectory()) return [];
+  return walkFiles(absRoot)
+    .filter((f) => /\.(txt|md|markdown)$/i.test(f))
+    .map((abs) => {
+      const rel = path.relative(absRoot, abs);
+      const relPosix = toPosix(rel);
+      return { abs, relPosix, name: path.basename(abs) };
+    })
+    .sort((a, b) => a.relPosix.localeCompare(b.relPosix, 'en'));
 }
 
 function listPdfFiles(rootDir) {
@@ -309,6 +323,74 @@ async function appendChunksFromPdfFileEntries(fileEntries, idCounter, chunks, pd
   return fileRows;
 }
 
+function shouldMergeLocalTranscripts() {
+  const v = (process.env.RAG_MERGE_TRANSCRIPTS ?? '1').toLowerCase();
+  return !['0', 'false', 'no', 'off'].includes(v);
+}
+
+function resolveTranscriptFileEntries() {
+  const dir = (process.env.RAG_TRANSCRIPTS_DIR || DEFAULT_TRANSCRIPTS_DIR).trim() || DEFAULT_TRANSCRIPTS_DIR;
+  return {
+    dir,
+    entries: listTextFiles(dir)
+  };
+}
+
+async function appendChunksFromTextFileEntries(fileEntries, idCounter, chunks) {
+  const fileRows = [];
+  for (const file of fileEntries) {
+    const text = fs.readFileSync(file.abs, 'utf8');
+    const clean = text.trim();
+    if (!clean) continue;
+    const sha256 = crypto.createHash('sha256').update(clean).digest('hex');
+    fileRows.push({
+      path: file.relPosix,
+      name: file.name,
+      sha256,
+      chars: clean.length
+    });
+    const baseMetadata = {
+      source: file.name,
+      path: `transcripts/${file.relPosix}`,
+      sitePath: `/transcripts/${file.relPosix}`,
+      contentType: 'transcript'
+    };
+    const part = await chunkText(clean, baseMetadata, idCounter);
+    chunks.push(...part);
+    console.log(`Parsed transcript ${file.relPosix}: ${part.length} chunks`);
+  }
+  return fileRows;
+}
+
+function mergeTranscriptSummary(sourceSummary, transcriptSummary) {
+  return {
+    type: 'with_transcripts',
+    base: sourceSummary,
+    transcripts: transcriptSummary
+  };
+}
+
+function buildSourceHint(sourceSummary) {
+  if (sourceSummary.type === 'directory') {
+    return `${sourceSummary.fileCount} files from ${sourceSummary.path}`;
+  }
+  if (sourceSummary.type === 'urls') {
+    return `${sourceSummary.fetchedCount}/${sourceSummary.urlCount} URLs from ${sourceSummary.listFile}`;
+  }
+  if (sourceSummary.type === 'urls_and_pdfs') {
+    const u = sourceSummary.urls;
+    const p = sourceSummary.pdfs;
+    const pdfHint = p.type === 'directory' ? `${p.fileCount} PDF(s) from ${p.path}` : p.name;
+    return `${u.fetchedCount}/${u.urlCount} URLs + ${pdfHint}`;
+  }
+  if (sourceSummary.type === 'with_transcripts') {
+    const baseHint = buildSourceHint(sourceSummary.base);
+    const t = sourceSummary.transcripts;
+    return `${baseHint} + ${t.fileCount} transcript file(s) from ${t.path}`;
+  }
+  return `source sha256=${sourceSummary.sha256.slice(0, 12)}…`;
+}
+
 function buildPdfSourceSummary(fileRows, effectiveDir, usedPdfPathFallback) {
   const pdfPathResolved = path.resolve(PDF_PATH);
   const singleFileFromPdfPath =
@@ -432,6 +514,20 @@ async function main() {
         };
       }
     }
+
+    if (shouldMergeLocalTranscripts()) {
+      const { dir, entries } = resolveTranscriptFileEntries();
+      if (entries.length > 0) {
+        console.log(`Merging ${entries.length} local transcript file(s) (${path.resolve(dir)})`);
+        const fileRows = await appendChunksFromTextFileEntries(entries, idCounter, chunks);
+        sourceSummary = mergeTranscriptSummary(sourceSummary, {
+          type: 'directory',
+          path: path.resolve(dir),
+          fileCount: fileRows.length,
+          files: fileRows
+        });
+      }
+    }
   } else {
     const { entries, effectiveDir, usedPdfPathFallback } = resolveLocalPdfFileEntries();
 
@@ -447,6 +543,20 @@ async function main() {
 
     const fileRows = await appendChunksFromPdfFileEntries(entries, idCounter, chunks, pdfPipelineRuns);
     sourceSummary = buildPdfSourceSummary(fileRows, effectiveDir, usedPdfPathFallback);
+
+    if (shouldMergeLocalTranscripts()) {
+      const { dir, entries: transcriptEntries } = resolveTranscriptFileEntries();
+      if (transcriptEntries.length > 0) {
+        console.log(`Merging ${transcriptEntries.length} local transcript file(s) (${path.resolve(dir)})`);
+        const transcriptRows = await appendChunksFromTextFileEntries(transcriptEntries, idCounter, chunks);
+        sourceSummary = mergeTranscriptSummary(sourceSummary, {
+          type: 'directory',
+          path: path.resolve(dir),
+          fileCount: transcriptRows.length,
+          files: transcriptRows
+        });
+      }
+    }
   }
 
   fs.mkdirSync(path.dirname(OUT_PATH), { recursive: true });
@@ -499,19 +609,7 @@ async function main() {
     chunks
   };
   fs.writeFileSync(OUT_PATH, JSON.stringify(payload, null, 0));
-  let hint = '';
-  if (sourceSummary.type === 'directory') {
-    hint = `${sourceSummary.fileCount} files from ${sourceSummary.path}`;
-  } else if (sourceSummary.type === 'urls') {
-    hint = `${sourceSummary.fetchedCount}/${sourceSummary.urlCount} URLs from ${sourceSummary.listFile}`;
-  } else if (sourceSummary.type === 'urls_and_pdfs') {
-    const u = sourceSummary.urls;
-    const p = sourceSummary.pdfs;
-    const pdfHint = p.type === 'directory' ? `${p.fileCount} PDF(s) from ${p.path}` : p.name;
-    hint = `${u.fetchedCount}/${u.urlCount} URLs + ${pdfHint}`;
-  } else {
-    hint = `source sha256=${sourceSummary.sha256.slice(0, 12)}…`;
-  }
+  const hint = buildSourceHint(sourceSummary);
   console.log(`Saved: ${OUT_PATH} (schema v${SCHEMA_VERSION}, ${chunks.length} chunks, ${hint})`);
 }
 
