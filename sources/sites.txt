@@ -7,7 +7,6 @@ https://jackschaedler.github.io/circles-sines-signals/
 https://www.dspguide.com/
 https://dspguru.com
 https://greenteapress.com/wp/think-dsp/
-https://github.com/AllenDowney/ThinkDSP
 https://ccrma.stanford.edu/~jos/mdft/mdft.html
 https://www.tutorialspoint.com/digital_signal_processing/index.htm
 https://www.khanacademy.org/science/electrical-engineering/ee-signals
