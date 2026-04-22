@@ -1,0 +1,70 @@
+Parfait. Voici une grammaire minimale qui marche bien pour traduire un prompt texte en effet DSP de façon robuste.
+
+effect_intent:
+  source: "voice|music|fx|any"
+  style_tags: ["burp", "wet", "dirty"]      # 1-5 tags perceptifs
+  intensity: 0.0-1.0                         # force globale
+  timing:
+    trigger: "always|onset|vad_active|manual"
+    attack_ms: 5-200
+    hold_ms: 0-500
+    release_ms: 20-1000
+  spectral:
+    tilt: -1.0..1.0                          # sombre <0, brillant >0
+    formant_shift: -12..+12                  # semitone-like perceptif
+    resonance: 0.0-1.0
+  pitch:
+    shift_semitones: -24..+24
+    glide_ms: 0-300
+    jitter: 0.0-1.0
+  noise:
+    amount: 0.0-1.0
+    color: "pink|brown|band"
+    band_hz: [80, 600]
+  nonlinear:
+    drive: 0.0-1.0
+    asymmetry: 0.0-1.0
+    anti_aliasing: "on|off"
+  space:
+    early_reflections: 0.0-1.0
+    reverb_mix: 0.0-1.0
+  mix:
+    wet: 0.0-1.0
+    output_trim_db: -24..+6
+  constraints:
+    max_latency_ms: 0-20
+    keep_intelligibility: true|false
+    cpu_budget: "low|mid|high"
+  safety:
+    max_peak_dbfs: -6..-0.5
+    limiter: true|false
+Mapping concret (tag → blocs DSP)
+burp → pitch down envelope + band emphasis 150–400 Hz + turbulence noise + soft clip.
+dirty → saturation asymétrique + légère compression + hiss/rumble contrôlé.
+wet → early reflections + courte room reverb.
+robot → formant fix + slight ring-mod/vocodeur léger.
+telephone → band-pass étroit 300–3.4k + disto douce.
+Exemple rempli (ton cas)
+effect_intent:
+  source: "voice"
+  style_tags: ["burp", "dirty"]
+  intensity: 0.62
+  timing: { trigger: "vad_active", attack_ms: 25, hold_ms: 80, release_ms: 180 }
+  spectral: { tilt: -0.35, formant_shift: -4, resonance: 0.55 }
+  pitch: { shift_semitones: -3, glide_ms: 70, jitter: 0.08 }
+  noise: { amount: 0.22, color: "brown", band_hz: [90, 500] }
+  nonlinear: { drive: 0.38, asymmetry: 0.4, anti_aliasing: "on" }
+  space: { early_reflections: 0.12, reverb_mix: 0.05 }
+  mix: { wet: 0.46, output_trim_db: -3.0 }
+  constraints: { max_latency_ms: 10, keep_intelligibility: true, cpu_budget: "mid" }
+  safety: { max_peak_dbfs: -1.0, limiter: true }
+Prompt système conseillé (pour ton agent)
+“Convertis la demande utilisateur en effect_intent JSON valide.”
+“Ensuite génère une chaîne DSP avec: 1) blocs, 2) paramètres initiaux, 3) dépendances entre blocs.”
+“Respecte constraints et safety.”
+“Si ambigu, propose 2 variantes: subtle et extreme.”
+Pourquoi ça marche
+Tu sépares langage humain et contrôle DSP.
+Tu rends la sortie évaluable (bornes numériques).
+Tu facilites l’itération (“+ sale”, “moins grave”, “plus court”) sans repartir de zéro.
+Si tu veux, je peux te donner ensuite une table prête à l’emploi style_tags -> paramètres Faust pour brancher ça directement dans ton générateur.

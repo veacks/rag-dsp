@@ -162,6 +162,64 @@ function shouldSkipUrlByPathname(urlStr) {
   return /\.(?:css|js|mjs|cjs|map|json|xml|rss|atom|jpg|jpeg|png|gif|webp|svg|ico|woff2?|ttf|eot|zip|gz|bz2|xz|7z|tar|rar|mp3|wav|flac|ogg|mp4|avi|mov|webm)$/i.test(u.pathname);
 }
 
+function resolvePdfResourceSaveDir() {
+  const envDir = (process.env.RAG_PDF_RESOURCE_DIR || '').trim();
+  if (envDir) return envDir;
+  const envSourceDir = (process.env.RAG_SOURCE_DIR || process.env.SOURCE_DIR || '').trim();
+  if (envSourceDir) return path.join(envSourceDir, 'resources');
+  const defaultPdfDirAbs = path.resolve(DEFAULT_PDF_DIR);
+  if (fs.existsSync(defaultPdfDirAbs) && fs.statSync(defaultPdfDirAbs).isDirectory()) {
+    return path.join(DEFAULT_PDF_DIR, 'resources');
+  }
+  return './sources/pdf/resources';
+}
+
+function canonicalPdfUrlString(urlStr) {
+  const u = new URL(urlStr);
+  u.hash = '';
+  return u.href;
+}
+
+/** Stable filename from URL only (so we can test existence before downloading). */
+function buildStablePdfFilename(urlStr) {
+  const canonical = canonicalPdfUrlString(urlStr);
+  const u = new URL(canonical);
+  const urlTag = crypto.createHash('sha256').update(canonical).digest('hex').slice(0, 12);
+  const rawBase = `${u.hostname}${u.pathname || '/'}`
+    .toLowerCase()
+    .replace(/\/+$/, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+  const safeBase = rawBase || 'remote-pdf';
+  return `${safeBase}-${urlTag}.pdf`;
+}
+
+function pdfResourcePathsForUrl(urlStr) {
+  const outDir = path.resolve(resolvePdfResourceSaveDir());
+  const name = buildStablePdfFilename(urlStr);
+  const abs = path.join(outDir, name);
+  return {
+    abs,
+    relPosix: toPosix(path.relative(process.cwd(), abs)),
+    name
+  };
+}
+
+function isPdfMagicBuffer(buf) {
+  return buf.length >= 4 && buf.slice(0, 4).toString() === '%PDF';
+}
+
+/** Save crawled PDF bytes under the stable path for this URL; skip write if file already exists. */
+function writePdfResourceIfAbsent(buffer, urlStr) {
+  const { abs, relPosix } = pdfResourcePathsForUrl(urlStr);
+  fs.mkdirSync(path.dirname(abs), { recursive: true });
+  if (fs.existsSync(abs)) {
+    return { abs, relPosix, skipped: true };
+  }
+  fs.writeFileSync(abs, buffer);
+  return { abs, relPosix, skipped: false };
+}
+
 function extractPageLinks(html, baseUrl, origin) {
   if (!html) return [];
   const links = new Set();
@@ -673,6 +731,7 @@ async function main() {
   if (crawlUrls.length > 0) {
     console.log(`Crawl mode: ${crawlUrls.length} URL(s) from ${path.resolve(sitesTxtPath)}`);
     const fetched = [];
+    const downloadedPdfResources = [];
     const seen = new Set();
     let pagesScanned = 0;
     for (let i = 0; i < crawlUrls.length; i++) {
@@ -693,7 +752,40 @@ async function main() {
         pagesForSeed += 1;
 
         try {
-          const { text, bytes, finalUrl, pdfBuffer, contentType, html } = await fetchUrlText(requestedUrl);
+          const normReq = normalizeCrawlCandidate(requestedUrl, requestedUrl) || requestedUrl;
+          let text;
+          let bytes;
+          let finalUrl;
+          let pdfBuffer;
+          let contentType;
+          let html;
+          let pdfFromCache = false;
+
+          const preLocal = pdfResourcePathsForUrl(normReq);
+          if (fs.existsSync(preLocal.abs)) {
+            const buf = fs.readFileSync(preLocal.abs);
+            if (isPdfMagicBuffer(buf)) {
+              const parsed = await pdf(buf);
+              text = parsed.text;
+              pdfBuffer = buf;
+              bytes = buf.length;
+              finalUrl = normReq;
+              contentType = 'application/pdf';
+              html = null;
+              pdfFromCache = true;
+            }
+          }
+
+          if (!pdfFromCache) {
+            const got = await fetchUrlText(requestedUrl);
+            text = got.text;
+            bytes = got.bytes;
+            finalUrl = got.finalUrl;
+            pdfBuffer = got.pdfBuffer;
+            contentType = got.contentType;
+            html = got.html;
+          }
+
           const normalizedFinal = normalizeCrawlCandidate(finalUrl, requestedUrl) || finalUrl;
           const finalObj = new URL(normalizedFinal);
           if (finalObj.origin !== seedOrigin) {
@@ -709,24 +801,48 @@ async function main() {
               .createHash('sha256')
               .update(pdfBuffer || text)
               .digest('hex');
-            fetched.push({ url: normalizedFinal, requested: requestedUrl, bytes, sha256 });
+            fetched.push({
+              url: normalizedFinal,
+              requested: requestedUrl,
+              bytes,
+              sha256,
+              pdfFromCache
+            });
             const baseMetadata = metadataFromFetchedUrl(normalizedFinal);
             let part;
             if (pdfBuffer) {
-              const relPosix = toPosix(finalObj.pathname.replace(/^\/+/, '') || 'remote.pdf');
+              let savedPdf;
+              if (pdfFromCache) {
+                savedPdf = { relPosix: preLocal.relPosix, skipped: true };
+              } else {
+                const write = writePdfResourceIfAbsent(pdfBuffer, normalizedFinal);
+                savedPdf = { relPosix: write.relPosix, skipped: write.skipped };
+                if (write.skipped) {
+                  console.log(`PDF already on disk, skipped download write: ${write.relPosix}`);
+                }
+              }
+              downloadedPdfResources.push({
+                url: normalizedFinal,
+                path: savedPdf.relPosix,
+                sha256,
+                bytes,
+                fromCache: pdfFromCache,
+                skippedWrite: pdfFromCache ? false : savedPdf.skipped
+              });
               const out = await pdfBufferToChunks(pdfBuffer, {
-                relPosix,
+                relPosix: savedPdf.relPosix,
                 baseMetadata,
                 idCounter,
                 fileSha256: sha256
               });
               part = out.chunks;
-              if (out.pdfPipeline) pdfPipelineRuns.push({ path: relPosix, url: normalizedFinal, ...out.pdfPipeline });
+              if (out.pdfPipeline) pdfPipelineRuns.push({ path: savedPdf.relPosix, url: normalizedFinal, ...out.pdfPipeline });
             } else {
               part = await chunkText(text, baseMetadata, idCounter);
             }
             chunks.push(...part);
-            console.log(`Fetched ${normalizedFinal}: ${part.length} chunk(s), ${text.length} chars`);
+            const srcHint = pdfFromCache ? ' (local PDF cache)' : '';
+            console.log(`Fetched ${normalizedFinal}: ${part.length} chunk(s), ${text.length} chars${srcHint}`);
           }
 
           const isHtml = (contentType || '').includes('html');
@@ -758,7 +874,12 @@ async function main() {
       crawledPageCount: fetched.length,
       fetchedCount: fetched.length,
       siteBaseUrl: SITE_BASE_URL || null,
-      fetched
+      fetched,
+      pdfResources: {
+        path: path.resolve(resolvePdfResourceSaveDir()),
+        count: downloadedPdfResources.length,
+        files: downloadedPdfResources
+      }
     };
     sourceSummary = crawlSourceSummary;
 
