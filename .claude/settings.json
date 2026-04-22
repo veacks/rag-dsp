@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(node -e \"console.log\\(require\\('/Users/veacks/Sites/flowise-dsp-rag/node_modules/better-sqlite3/package.json'\\).version\\)\")",
+      "Bash(node -e \"const Database = require\\('/Users/veacks/Sites/flowise-dsp-rag/node_modules/better-sqlite3'\\); const db = new Database\\(':memory:'\\); console.log\\('db methods:', Object.getOwnPropertyNames\\(Object.getPrototypeOf\\(db\\)\\).slice\\(0,10\\)\\)\")",
+      "Bash(tar -tzf -)",
+      "Bash(grep -E \"\\\\.mjs$|\\\\.js$|\\\\.cjs$\")",
+      "Bash(tar -xzOf - 'package/index.mjs')",
+      "Bash(tar -xzOf - 'package/README.md')",
+      "Bash(node --input-type=module -e \"import http from 'node:http'; console.log\\('http ok:', typeof http.createServer\\);\")"
+    ]
+  }
+}
