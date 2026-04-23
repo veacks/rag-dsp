@@ -1,0 +1,21 @@
+{
+  "platform": "claude",
+  "displayName": "Claude Code",
+  "installType": "full",
+  "folderStructure": {
+    "root": ".claude",
+    "skillPath": "skills/dsprag",
+    "filename": "SKILL.md"
+  },
+  "scriptPath": "scripts/install-skill.mjs",
+  "frontmatter": {
+    "name": "dsprag",
+    "description": "DSP RAG installer profile for Claude Code"
+  },
+  "sections": {
+    "quickReference": true
+  },
+  "title": "DSP RAG Claude Code",
+  "description": "DSP retrieval-augmented generation setup for Claude Code",
+  "skillOrWorkflow": "Skill"
+}

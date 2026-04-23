@@ -1,0 +1,21 @@
+{
+  "platform": "windsurf",
+  "displayName": "Windsurf",
+  "installType": "full",
+  "folderStructure": {
+    "root": ".windsurf",
+    "skillPath": "rules/dsprag",
+    "filename": "SKILL.md"
+  },
+  "scriptPath": "scripts/install-skill.mjs",
+  "frontmatter": {
+    "name": "dsprag",
+    "description": "DSP RAG installer profile for Windsurf"
+  },
+  "sections": {
+    "quickReference": true
+  },
+  "title": "DSP RAG Windsurf",
+  "description": "DSP retrieval-augmented generation setup for Windsurf",
+  "skillOrWorkflow": "Skill"
+}

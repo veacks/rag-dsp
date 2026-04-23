@@ -1,0 +1,21 @@
+{
+  "platform": "qoder",
+  "displayName": "Qoder",
+  "installType": "full",
+  "folderStructure": {
+    "root": ".qoder",
+    "skillPath": "skills/dsprag",
+    "filename": "SKILL.md"
+  },
+  "scriptPath": "scripts/install-skill.mjs",
+  "frontmatter": {
+    "name": "dsprag",
+    "description": "DSP RAG installer profile for Qoder"
+  },
+  "sections": {
+    "quickReference": true
+  },
+  "title": "DSP RAG Qoder",
+  "description": "DSP retrieval-augmented generation setup for Qoder",
+  "skillOrWorkflow": "Skill"
+}

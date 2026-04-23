@@ -1,0 +1,21 @@
+{
+  "platform": "codex",
+  "displayName": "Codex CLI",
+  "installType": "full",
+  "folderStructure": {
+    "root": ".codex",
+    "skillPath": "skills/dsprag",
+    "filename": "SKILL.md"
+  },
+  "scriptPath": "scripts/install-skill.mjs",
+  "frontmatter": {
+    "name": "dsprag",
+    "description": "DSP RAG installer profile for Codex CLI"
+  },
+  "sections": {
+    "quickReference": true
+  },
+  "title": "DSP RAG Codex CLI",
+  "description": "DSP retrieval-augmented generation setup for Codex CLI",
+  "skillOrWorkflow": "Skill"
+}

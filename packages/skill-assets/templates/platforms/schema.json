@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://flowise-dsp-rag.local/schemas/platform-manifest.schema.json",
+  "title": "DSP RAG platform manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "platform",
+    "displayName",
+    "installType",
+    "folderStructure",
+    "scriptPath",
+    "frontmatter",
+    "sections",
+    "title",
+    "description",
+    "skillOrWorkflow"
+  ],
+  "properties": {
+    "platform": {
+      "type": "string",
+      "minLength": 1
+    },
+    "displayName": {
+      "type": "string",
+      "minLength": 1
+    },
+    "installType": {
+      "type": "string",
+      "minLength": 1
+    },
+    "folderStructure": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["root", "skillPath", "filename"],
+      "properties": {
+        "root": { "type": "string", "minLength": 1 },
+        "skillPath": { "type": "string", "minLength": 1 },
+        "filename": { "type": "string", "minLength": 1 }
+      }
+    },
+    "scriptPath": {
+      "type": "string",
+      "minLength": 1
+    },
+    "frontmatter": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "description"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "description": { "type": "string", "minLength": 1 }
+      }
+    },
+    "sections": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["quickReference"],
+      "properties": {
+        "quickReference": { "type": "boolean" }
+      }
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "description": {
+      "type": "string",
+      "minLength": 1
+    },
+    "skillOrWorkflow": {
+      "type": "string",
+      "enum": ["Skill", "Workflow"]
+    }
+  }
+}

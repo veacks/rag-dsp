@@ -1,0 +1,21 @@
+{
+  "platform": "kiro",
+  "displayName": "Kiro",
+  "installType": "full",
+  "folderStructure": {
+    "root": ".kiro",
+    "skillPath": "skills/dsprag",
+    "filename": "SKILL.md"
+  },
+  "scriptPath": "scripts/install-skill.mjs",
+  "frontmatter": {
+    "name": "dsprag",
+    "description": "DSP RAG installer profile for Kiro"
+  },
+  "sections": {
+    "quickReference": true
+  },
+  "title": "DSP RAG Kiro",
+  "description": "DSP retrieval-augmented generation setup for Kiro",
+  "skillOrWorkflow": "Skill"
+}

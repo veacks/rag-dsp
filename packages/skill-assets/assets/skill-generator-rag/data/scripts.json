@@ -1,0 +1,10 @@
+{
+  "generate": {
+    "path": "scripts/generate-skill.mjs",
+    "description": "Scaffold a SKILL.md with URL or embedded RAG mode"
+  },
+  "install": {
+    "path": "scripts/install-skill-generator.mjs",
+    "description": "Install skill-generator-rag into supported tool skill directories"
+  }
+}

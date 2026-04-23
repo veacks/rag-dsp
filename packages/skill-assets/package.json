@@ -1,0 +1,15 @@
+{
+  "name": "@dsprag/skill-assets",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "src/index.mjs",
+  "scripts": {
+    "build": "node --eval \"import('./src/index.mjs')\"",
+    "typecheck": "node --eval \"import('./src/index.mjs')\"",
+    "validate-assets": "node ./scripts/validate-assets.mjs",
+    "validate:platform-manifests": "node ./scripts/validate-platform-manifests.mjs",
+    "test:render-platforms": "node ./scripts/smoke-render-platforms.mjs",
+    "ci:platform-manifests": "npm run validate:platform-manifests && npm run test:render-platforms"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "platform": "gemini",
+  "displayName": "Gemini CLI",
+  "installType": "full",
+  "folderStructure": {
+    "root": ".gemini",
+    "skillPath": "skills/dsprag",
+    "filename": "SKILL.md"
+  },
+  "scriptPath": "scripts/install-skill.mjs",
+  "frontmatter": {
+    "name": "dsprag",
+    "description": "DSP RAG installer profile for Gemini CLI"
+  },
+  "sections": {
+    "quickReference": true
+  },
+  "title": "DSP RAG Gemini CLI",
+  "description": "DSP retrieval-augmented generation setup for Gemini CLI",
+  "skillOrWorkflow": "Skill"
+}

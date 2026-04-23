@@ -1,0 +1,22 @@
+{
+  "name": "@dsprag/mcp",
+  "version": "0.1.0",
+  "private": false,
+  "type": "module",
+  "main": "./src/index.mjs",
+  "bin": "./bin/dsprag-mcp.mjs",
+  "exports": {
+    ".": "./src/index.mjs"
+  },
+  "files": [
+    "bin",
+    "src"
+  ],
+  "scripts": {
+    "build": "node --eval \"import('./src/index.mjs')\" && node --check ./bin/dsprag-mcp.mjs",
+    "typecheck": "node --eval \"import('./src/index.mjs')\" && node --check ./bin/dsprag-mcp.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

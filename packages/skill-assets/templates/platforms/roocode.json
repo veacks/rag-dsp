@@ -1,0 +1,21 @@
+{
+  "platform": "roocode",
+  "displayName": "Roo Code",
+  "installType": "full",
+  "folderStructure": {
+    "root": ".roo",
+    "skillPath": "rules/dsprag",
+    "filename": "SKILL.md"
+  },
+  "scriptPath": "scripts/install-skill.mjs",
+  "frontmatter": {
+    "name": "dsprag",
+    "description": "DSP RAG installer profile for Roo Code"
+  },
+  "sections": {
+    "quickReference": true
+  },
+  "title": "DSP RAG Roo Code",
+  "description": "DSP retrieval-augmented generation setup for Roo Code",
+  "skillOrWorkflow": "Skill"
+}

@@ -1,0 +1,21 @@
+{
+  "platform": "codebuddy",
+  "displayName": "CodeBuddy",
+  "installType": "full",
+  "folderStructure": {
+    "root": ".codebuddy",
+    "skillPath": "skills/dsprag",
+    "filename": "SKILL.md"
+  },
+  "scriptPath": "scripts/install-skill.mjs",
+  "frontmatter": {
+    "name": "dsprag",
+    "description": "DSP RAG installer profile for CodeBuddy"
+  },
+  "sections": {
+    "quickReference": true
+  },
+  "title": "DSP RAG CodeBuddy",
+  "description": "DSP retrieval-augmented generation setup for CodeBuddy",
+  "skillOrWorkflow": "Skill"
+}

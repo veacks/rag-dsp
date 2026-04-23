@@ -1,0 +1,21 @@
+{
+  "platform": "warp",
+  "displayName": "Warp",
+  "installType": "full",
+  "folderStructure": {
+    "root": ".warp",
+    "skillPath": "workflows/dsprag",
+    "filename": "WORKFLOW.md"
+  },
+  "scriptPath": "scripts/install-skill.mjs",
+  "frontmatter": {
+    "name": "dsprag",
+    "description": "DSP RAG installer profile for Warp"
+  },
+  "sections": {
+    "quickReference": true
+  },
+  "title": "DSP RAG Warp",
+  "description": "DSP retrieval-augmented generation setup for Warp",
+  "skillOrWorkflow": "Workflow"
+}

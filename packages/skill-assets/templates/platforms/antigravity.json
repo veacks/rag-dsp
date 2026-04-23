@@ -1,0 +1,21 @@
+{
+  "platform": "antigravity",
+  "displayName": "Antigravity",
+  "installType": "full",
+  "folderStructure": {
+    "root": ".antigravity",
+    "skillPath": "skills/dsprag",
+    "filename": "SKILL.md"
+  },
+  "scriptPath": "scripts/install-skill.mjs",
+  "frontmatter": {
+    "name": "dsprag",
+    "description": "DSP RAG installer profile for Antigravity"
+  },
+  "sections": {
+    "quickReference": true
+  },
+  "title": "DSP RAG Antigravity",
+  "description": "DSP retrieval-augmented generation setup for Antigravity",
+  "skillOrWorkflow": "Skill"
+}

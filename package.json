@@ -1,8 +1,12 @@
 {
   "name": "flowise-dsp-rag",
   "version": "1.0.0",
+  "private": true,
   "description": "Build OpenAI-embedded RAG indices, export vectors, upsert to Flowise, and browse chunks locally.",
   "type": "module",
+  "workspaces": [
+    "packages/*"
+  ],
   "bin": {
     "rager": "./bin/rager.mjs"
   },

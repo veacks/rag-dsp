@@ -1,0 +1,21 @@
+{
+  "platform": "continue",
+  "displayName": "Continue",
+  "installType": "full",
+  "folderStructure": {
+    "root": ".continue",
+    "skillPath": "prompts/dsprag",
+    "filename": "PROMPT.md"
+  },
+  "scriptPath": "scripts/install-skill.mjs",
+  "frontmatter": {
+    "name": "dsprag",
+    "description": "DSP RAG installer profile for Continue"
+  },
+  "sections": {
+    "quickReference": true
+  },
+  "title": "DSP RAG Continue",
+  "description": "DSP retrieval-augmented generation setup for Continue",
+  "skillOrWorkflow": "Skill"
+}

@@ -1,0 +1,8 @@
+{
+  "skill_id": "skill-generator-rag",
+  "title": "Skill generator (RAG)",
+  "description": "Scaffolds new agent skills with optional RAG retrieval via remote rag.json URL or embedded standalone index file.",
+  "script_path": "scripts/install-skill-generator.mjs",
+  "generate_command": "node scripts/generate-skill.mjs --name <skill-name> --rag embedded --rag-path ./public/rag.json --out <dir>",
+  "install_command": "node scripts/install-skill-generator.mjs --all"
+}

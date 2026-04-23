@@ -1,0 +1,21 @@
+{
+  "platform": "droid",
+  "displayName": "Droid (Factory)",
+  "installType": "full",
+  "folderStructure": {
+    "root": ".droid",
+    "skillPath": "skills/dsprag",
+    "filename": "SKILL.md"
+  },
+  "scriptPath": "scripts/install-skill.mjs",
+  "frontmatter": {
+    "name": "dsprag",
+    "description": "DSP RAG installer profile for Droid (Factory)"
+  },
+  "sections": {
+    "quickReference": true
+  },
+  "title": "DSP RAG Droid (Factory)",
+  "description": "DSP retrieval-augmented generation setup for Droid (Factory)",
+  "skillOrWorkflow": "Skill"
+}

@@ -1,0 +1,21 @@
+{
+  "platform": "augment",
+  "displayName": "Augment",
+  "installType": "full",
+  "folderStructure": {
+    "root": ".augment",
+    "skillPath": "skills/dsprag",
+    "filename": "SKILL.md"
+  },
+  "scriptPath": "scripts/install-skill.mjs",
+  "frontmatter": {
+    "name": "dsprag",
+    "description": "DSP RAG installer profile for Augment"
+  },
+  "sections": {
+    "quickReference": true
+  },
+  "title": "DSP RAG Augment",
+  "description": "DSP retrieval-augmented generation setup for Augment",
+  "skillOrWorkflow": "Skill"
+}

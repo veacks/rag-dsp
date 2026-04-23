@@ -1,0 +1,29 @@
+{
+  "name": "@dsprag/core",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "./dist/node/index.mjs",
+  "module": "./dist/node/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "browser": "./dist/browser/index.mjs",
+      "import": "./dist/node/index.mjs",
+      "default": "./dist/node/index.mjs"
+    }
+  },
+  "files": [
+    "dist",
+    "src",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "node ./scripts/build.mjs",
+    "typecheck": "npm run build && node --eval \"import('./dist/node/index.mjs')\"",
+    "test": "node --test ./test/*.test.mjs",
+    "smoke:node": "npm run build && node --eval \"import('./dist/node/index.mjs')\"",
+    "smoke:browser": "npm run build && node --conditions=browser --eval \"import('./dist/browser/index.mjs')\""
+  }
+}

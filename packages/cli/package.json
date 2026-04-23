@@ -1,0 +1,17 @@
+{
+  "name": "@dsprag/cli",
+  "version": "0.1.0",
+  "private": false,
+  "type": "module",
+  "main": "src/index.mjs",
+  "bin": {
+    "dsprag": "./bin/dsprag.mjs"
+  },
+  "scripts": {
+    "build": "node --eval \"import('./src/index.mjs')\" && node --check ./bin/dsprag.mjs",
+    "typecheck": "node --eval \"import('./src/index.mjs')\" && node --check ./bin/dsprag.mjs"
+  },
+  "dependencies": {
+    "@dsprag/skill-assets": "0.1.0"
+  }
+}

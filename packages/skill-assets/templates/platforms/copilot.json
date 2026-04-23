@@ -1,0 +1,21 @@
+{
+  "platform": "copilot",
+  "displayName": "GitHub Copilot",
+  "installType": "full",
+  "folderStructure": {
+    "root": ".github",
+    "skillPath": "instructions/dsprag",
+    "filename": "SKILL.md"
+  },
+  "scriptPath": "scripts/install-skill.mjs",
+  "frontmatter": {
+    "name": "dsprag",
+    "description": "DSP RAG installer profile for GitHub Copilot"
+  },
+  "sections": {
+    "quickReference": true
+  },
+  "title": "DSP RAG GitHub Copilot",
+  "description": "DSP retrieval-augmented generation setup for GitHub Copilot",
+  "skillOrWorkflow": "Skill"
+}

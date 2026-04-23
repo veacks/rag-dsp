@@ -1,0 +1,21 @@
+{
+  "platform": "cursor",
+  "displayName": "Cursor",
+  "installType": "full",
+  "folderStructure": {
+    "root": ".cursor",
+    "skillPath": "rules/dsprag",
+    "filename": "SKILL.md"
+  },
+  "scriptPath": "scripts/install-skill.mjs",
+  "frontmatter": {
+    "name": "dsprag",
+    "description": "DSP RAG installer profile for Cursor"
+  },
+  "sections": {
+    "quickReference": true
+  },
+  "title": "DSP RAG Cursor",
+  "description": "DSP retrieval-augmented generation setup for Cursor",
+  "skillOrWorkflow": "Skill"
+}
