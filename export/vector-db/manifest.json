@@ -1,0 +1,7740 @@
+{
+  "schemaVersion": 5,
+  "builtAt": "2026-04-18T07:30:50.831Z",
+  "source": {
+    "type": "urls_and_pdfs",
+    "urls": {
+      "type": "urls",
+      "listFile": "/Users/veacks/Sites/flowise-dsp-rag/sources/sites.txt",
+      "urlCount": 3,
+      "fetchedCount": 3,
+      "siteBaseUrl": null,
+      "fetched": [
+        {
+          "url": "https://faust.grame.fr/",
+          "requested": "https://faust.grame.fr/",
+          "bytes": 47541,
+          "sha256": "c9e472a7a7849b9ecc33b0727d63b826a063c7981b9e4122978cfd194cb78769"
+        },
+        {
+          "url": "https://faustdoc.grame.fr/",
+          "requested": "https://faustdoc.grame.fr/",
+          "bytes": 19971,
+          "sha256": "2cd63a9a1d0d255ab432d2687cf9397296108af10d0ead06364e9f33ec4d8055"
+        },
+        {
+          "url": "https://faustlibraries.grame.fr/",
+          "requested": "https://faustlibraries.grame.fr/",
+          "bytes": 17157,
+          "sha256": "fc7073ce04060c6f545fae647e20c70052cb40f26bbfd5b05e842974b2558131"
+        }
+      ]
+    },
+    "pdfs": {
+      "type": "directory",
+      "path": "/Users/veacks/Sites/flowise-dsp-rag/sources",
+      "siteBaseUrl": null,
+      "fileCount": 2,
+      "files": [
+        {
+          "path": "pdf/dokumen.pub_designing-audio-effect-plugins-in-c-for-aax-au-and-vst3-with-dsp-theory-2nbsped-1138591890-9781138591899.pdf",
+          "name": "dokumen.pub_designing-audio-effect-plugins-in-c-for-aax-au-and-vst3-with-dsp-theory-2nbsped-1138591890-9781138591899.pdf",
+          "sha256": "ec42c2bf9ae357239e91bf4763be47155914665163c1738185c6e576e69c56a2",
+          "bytes": 17645126
+        },
+        {
+          "path": "pdf/The Scientist and Engineer Guide to DSP.pdf",
+          "name": "The Scientist and Engineer Guide to DSP.pdf",
+          "sha256": "5fe228d2f9407383d5a41f2dc5aa1366cb48301266066a9ecf43ea36443bde40",
+          "bytes": 12759999
+        }
+      ]
+    }
+  },
+  "embeddingModel": "text-embedding-3-small",
+  "chunking": {
+    "size": 1200,
+    "overlap": 200,
+    "splitter": "RecursiveCharacterTextSplitter",
+    "embeddings": "OpenAIEmbeddings",
+    "pdfLegacy": false
+  },
+  "pdfPipeline": {
+    "version": 1,
+    "legacy": false,
+    "visionEnabled": false,
+    "visionModel": "gpt-4o-mini",
+    "maxFigures": 24,
+    "renderScale": 1.5,
+    "assetDir": "public/rag-assets",
+    "runs": [
+      {
+        "path": "pdf/dokumen.pub_designing-audio-effect-plugins-in-c-for-aax-au-and-vst3-with-dsp-theory-2nbsped-1138591890-9781138591899.pdf",
+        "limits": {
+          "bookmarks": "Outline/bookmarks read via pdf.js getOutline() (titles only; dest resolution partial).",
+          "annotations": "Per-page annotation counts only; form field values and popup text are not expanded into chunks.",
+          "multi_column": "Reading order is line-based (y then x). Multi-column layouts may interleave incorrectly; see multiColumnHints per page when detected.",
+          "vector_vs_raster": "Embedded raster regions: bbox from canvas paint tracking + PNG crops. Pure vector graphics without image paint ops only appear in full-page raster, not as separate crops.",
+          "tables": "Heuristic: ≥3 gap-aligned cells × ≥3 consecutive rows. Headers/units are not guaranteed; inspect markdown.",
+          "code": "Monospace font-name heuristic on text layer; not OCR.",
+          "vision": "Disabled (set RAG_PDF_VISION=1 to enable).",
+          "xobject_paint_ops": 351,
+          "image_regions_recorded": 0,
+          "annotation_pages": [
+            {
+              "page": 1,
+              "count": 0
+            },
+            {
+              "page": 2,
+              "count": 0
+            },
+            {
+              "page": 3,
+              "count": 0
+            },
+            {
+              "page": 4,
+              "count": 0
+            },
+            {
+              "page": 5,
+              "count": 1
+            },
+            {
+              "page": 6,
+              "count": 0
+            },
+            {
+              "page": 7,
+              "count": 1
+            },
+            {
+              "page": 8,
+              "count": 34
+            },
+            {
+              "page": 9,
+              "count": 45
+            },
+            {
+              "page": 10,
+              "count": 45
+            },
+            {
+              "page": 11,
+              "count": 46
+            },
+            {
+              "page": 12,
+              "count": 46
+            },
+            {
+              "page": 13,
+              "count": 45
+            },
+            {
+              "page": 14,
+              "count": 47
+            },
+            {
+              "page": 15,
+              "count": 46
+            },
+            {
+              "page": 16,
+              "count": 46
+            },
+            {
+              "page": 17,
+              "count": 46
+            },
+            {
+              "page": 18,
+              "count": 44
+            },
+            {
+              "page": 19,
+              "count": 45
+            },
+            {
+              "page": 20,
+              "count": 45
+            },
+            {
+              "page": 21,
+              "count": 46
+            },
+            {
+              "page": 22,
+              "count": 46
+            },
+            {
+              "page": 23,
+              "count": 40
+            },
+            {
+              "page": 24,
+              "count": 9
+            },
+            {
+              "page": 25,
+              "count": 14
+            },
+            {
+              "page": 26,
+              "count": 14
+            },
+            {
+              "page": 27,
+              "count": 18
+            },
+            {
+              "page": 28,
+              "count": 21
+            },
+            {
+              "page": 29,
+              "count": 22
+            },
+            {
+              "page": 30,
+              "count": 20
+            },
+            {
+              "page": 31,
+              "count": 24
+            },
+            {
+              "page": 32,
+              "count": 19
+            },
+            {
+              "page": 33,
+              "count": 18
+            },
+            {
+              "page": 34,
+              "count": 17
+            },
+            {
+              "page": 35,
+              "count": 25
+            },
+            {
+              "page": 36,
+              "count": 21
+            },
+            {
+              "page": 37,
+              "count": 20
+            },
+            {
+              "page": 38,
+              "count": 26
+            },
+            {
+              "page": 39,
+              "count": 13
+            },
+            {
+              "page": 40,
+              "count": 17
+            },
+            {
+              "page": 41,
+              "count": 13
+            },
+            {
+              "page": 42,
+              "count": 19
+            },
+            {
+              "page": 43,
+              "count": 3
+            },
+            {
+              "page": 44,
+              "count": 33
+            },
+            {
+              "page": 45,
+              "count": 47
+            },
+            {
+              "page": 46,
+              "count": 39
+            },
+            {
+              "page": 47,
+              "count": 1
+            },
+            {
+              "page": 48,
+              "count": 12
+            },
+            {
+              "page": 49,
+              "count": 3
+            },
+            {
+              "page": 50,
+              "count": 4
+            },
+            {
+              "page": 51,
+              "count": 2
+            },
+            {
+              "page": 52,
+              "count": 5
+            },
+            {
+              "page": 53,
+              "count": 5
+            },
+            {
+              "page": 54,
+              "count": 4
+            },
+            {
+              "page": 55,
+              "count": 4
+            },
+            {
+              "page": 56,
+              "count": 3
+            },
+            {
+              "page": 57,
+              "count": 18
+            },
+            {
+              "page": 58,
+              "count": 2
+            },
+            {
+              "page": 59,
+              "count": 6
+            },
+            {
+              "page": 60,
+              "count": 7
+            },
+            {
+              "page": 61,
+              "count": 5
+            },
+            {
+              "page": 62,
+              "count": 5
+            },
+            {
+              "page": 63,
+              "count": 6
+            },
+            {
+              "page": 64,
+              "count": 2
+            },
+            {
+              "page": 65,
+              "count": 4
+            },
+            {
+              "page": 66,
+              "count": 2
+            },
+            {
+              "page": 67,
+              "count": 2
+            },
+            {
+              "page": 68,
+              "count": 2
+            },
+            {
+              "page": 69,
+              "count": 4
+            },
+            {
+              "page": 70,
+              "count": 6
+            },
+            {
+              "page": 71,
+              "count": 1
+            },
+            {
+              "page": 72,
+              "count": 2
+            },
+            {
+              "page": 73,
+              "count": 3
+            },
+            {
+              "page": 74,
+              "count": 4
+            },
+            {
+              "page": 75,
+              "count": 3
+            },
+            {
+              "page": 76,
+              "count": 6
+            },
+            {
+              "page": 77,
+              "count": 4
+            },
+            {
+              "page": 78,
+              "count": 2
+            },
+            {
+              "page": 79,
+              "count": 1
+            },
+            {
+              "page": 80,
+              "count": 7
+            },
+            {
+              "page": 81,
+              "count": 5
+            },
+            {
+              "page": 82,
+              "count": 4
+            },
+            {
+              "page": 83,
+              "count": 3
+            },
+            {
+              "page": 84,
+              "count": 5
+            },
+            {
+              "page": 85,
+              "count": 3
+            },
+            {
+              "page": 86,
+              "count": 4
+            },
+            {
+              "page": 87,
+              "count": 6
+            },
+            {
+              "page": 88,
+              "count": 3
+            },
+            {
+              "page": 89,
+              "count": 1
+            },
+            {
+              "page": 90,
+              "count": 2
+            },
+            {
+              "page": 91,
+              "count": 3
+            },
+            {
+              "page": 92,
+              "count": 1
+            },
+            {
+              "page": 93,
+              "count": 1
+            },
+            {
+              "page": 94,
+              "count": 3
+            },
+            {
+              "page": 95,
+              "count": 1
+            },
+            {
+              "page": 96,
+              "count": 4
+            },
+            {
+              "page": 97,
+              "count": 3
+            },
+            {
+              "page": 98,
+              "count": 2
+            },
+            {
+              "page": 99,
+              "count": 2
+            },
+            {
+              "page": 100,
+              "count": 2
+            },
+            {
+              "page": 101,
+              "count": 6
+            },
+            {
+              "page": 102,
+              "count": 3
+            },
+            {
+              "page": 103,
+              "count": 10
+            },
+            {
+              "page": 104,
+              "count": 6
+            },
+            {
+              "page": 105,
+              "count": 3
+            },
+            {
+              "page": 106,
+              "count": 1
+            },
+            {
+              "page": 107,
+              "count": 4
+            },
+            {
+              "page": 108,
+              "count": 2
+            },
+            {
+              "page": 109,
+              "count": 6
+            },
+            {
+              "page": 110,
+              "count": 1
+            },
+            {
+              "page": 111,
+              "count": 0
+            },
+            {
+              "page": 112,
+              "count": 0
+            },
+            {
+              "page": 113,
+              "count": 2
+            },
+            {
+              "page": 114,
+              "count": 1
+            },
+            {
+              "page": 115,
+              "count": 4
+            },
+            {
+              "page": 116,
+              "count": 5
+            },
+            {
+              "page": 117,
+              "count": 5
+            },
+            {
+              "page": 118,
+              "count": 1
+            },
+            {
+              "page": 119,
+              "count": 3
+            },
+            {
+              "page": 120,
+              "count": 0
+            },
+            {
+              "page": 121,
+              "count": 3
+            },
+            {
+              "page": 122,
+              "count": 2
+            },
+            {
+              "page": 123,
+              "count": 2
+            },
+            {
+              "page": 124,
+              "count": 1
+            },
+            {
+              "page": 125,
+              "count": 2
+            },
+            {
+              "page": 126,
+              "count": 10
+            },
+            {
+              "page": 127,
+              "count": 5
+            },
+            {
+              "page": 128,
+              "count": 5
+            },
+            {
+              "page": 129,
+              "count": 7
+            },
+            {
+              "page": 130,
+              "count": 3
+            },
+            {
+              "page": 131,
+              "count": 4
+            },
+            {
+              "page": 132,
+              "count": 3
+            },
+            {
+              "page": 133,
+              "count": 5
+            },
+            {
+              "page": 134,
+              "count": 2
+            },
+            {
+              "page": 135,
+              "count": 3
+            },
+            {
+              "page": 136,
+              "count": 0
+            },
+            {
+              "page": 137,
+              "count": 1
+            },
+            {
+              "page": 138,
+              "count": 2
+            },
+            {
+              "page": 139,
+              "count": 3
+            },
+            {
+              "page": 140,
+              "count": 4
+            },
+            {
+              "page": 141,
+              "count": 4
+            },
+            {
+              "page": 142,
+              "count": 3
+            },
+            {
+              "page": 143,
+              "count": 2
+            },
+            {
+              "page": 144,
+              "count": 0
+            },
+            {
+              "page": 145,
+              "count": 0
+            },
+            {
+              "page": 146,
+              "count": 4
+            },
+            {
+              "page": 147,
+              "count": 3
+            },
+            {
+              "page": 148,
+              "count": 1
+            },
+            {
+              "page": 149,
+              "count": 0
+            },
+            {
+              "page": 150,
+              "count": 2
+            },
+            {
+              "page": 151,
+              "count": 1
+            },
+            {
+              "page": 152,
+              "count": 3
+            },
+            {
+              "page": 153,
+              "count": 3
+            },
+            {
+              "page": 154,
+              "count": 1
+            },
+            {
+              "page": 155,
+              "count": 4
+            },
+            {
+              "page": 156,
+              "count": 3
+            },
+            {
+              "page": 157,
+              "count": 3
+            },
+            {
+              "page": 158,
+              "count": 2
+            },
+            {
+              "page": 159,
+              "count": 2
+            },
+            {
+              "page": 160,
+              "count": 5
+            },
+            {
+              "page": 161,
+              "count": 11
+            },
+            {
+              "page": 162,
+              "count": 5
+            },
+            {
+              "page": 163,
+              "count": 7
+            },
+            {
+              "page": 164,
+              "count": 10
+            },
+            {
+              "page": 165,
+              "count": 1
+            },
+            {
+              "page": 166,
+              "count": 6
+            },
+            {
+              "page": 167,
+              "count": 1
+            },
+            {
+              "page": 168,
+              "count": 1
+            },
+            {
+              "page": 169,
+              "count": 4
+            },
+            {
+              "page": 170,
+              "count": 1
+            },
+            {
+              "page": 171,
+              "count": 0
+            },
+            {
+              "page": 172,
+              "count": 4
+            },
+            {
+              "page": 173,
+              "count": 1
+            },
+            {
+              "page": 174,
+              "count": 6
+            },
+            {
+              "page": 175,
+              "count": 4
+            },
+            {
+              "page": 176,
+              "count": 3
+            },
+            {
+              "page": 177,
+              "count": 5
+            },
+            {
+              "page": 178,
+              "count": 2
+            },
+            {
+              "page": 179,
+              "count": 2
+            },
+            {
+              "page": 180,
+              "count": 1
+            },
+            {
+              "page": 181,
+              "count": 3
+            },
+            {
+              "page": 182,
+              "count": 1
+            },
+            {
+              "page": 183,
+              "count": 0
+            },
+            {
+              "page": 184,
+              "count": 1
+            },
+            {
+              "page": 185,
+              "count": 1
+            },
+            {
+              "page": 186,
+              "count": 2
+            },
+            {
+              "page": 187,
+              "count": 3
+            },
+            {
+              "page": 188,
+              "count": 2
+            },
+            {
+              "page": 189,
+              "count": 1
+            },
+            {
+              "page": 190,
+              "count": 2
+            },
+            {
+              "page": 191,
+              "count": 6
+            },
+            {
+              "page": 192,
+              "count": 3
+            },
+            {
+              "page": 193,
+              "count": 7
+            },
+            {
+              "page": 194,
+              "count": 0
+            },
+            {
+              "page": 195,
+              "count": 5
+            },
+            {
+              "page": 196,
+              "count": 4
+            },
+            {
+              "page": 197,
+              "count": 4
+            },
+            {
+              "page": 198,
+              "count": 4
+            },
+            {
+              "page": 199,
+              "count": 1
+            },
+            {
+              "page": 200,
+              "count": 6
+            },
+            {
+              "page": 201,
+              "count": 1
+            },
+            {
+              "page": 202,
+              "count": 4
+            },
+            {
+              "page": 203,
+              "count": 3
+            },
+            {
+              "page": 204,
+              "count": 5
+            },
+            {
+              "page": 205,
+              "count": 6
+            },
+            {
+              "page": 206,
+              "count": 3
+            },
+            {
+              "page": 207,
+              "count": 5
+            },
+            {
+              "page": 208,
+              "count": 6
+            },
+            {
+              "page": 209,
+              "count": 7
+            },
+            {
+              "page": 210,
+              "count": 4
+            },
+            {
+              "page": 211,
+              "count": 5
+            },
+            {
+              "page": 212,
+              "count": 9
+            },
+            {
+              "page": 213,
+              "count": 1
+            },
+            {
+              "page": 214,
+              "count": 3
+            },
+            {
+              "page": 215,
+              "count": 3
+            },
+            {
+              "page": 216,
+              "count": 3
+            },
+            {
+              "page": 217,
+              "count": 4
+            },
+            {
+              "page": 218,
+              "count": 2
+            },
+            {
+              "page": 219,
+              "count": 1
+            },
+            {
+              "page": 220,
+              "count": 2
+            },
+            {
+              "page": 221,
+              "count": 1
+            },
+            {
+              "page": 222,
+              "count": 5
+            },
+            {
+              "page": 223,
+              "count": 2
+            },
+            {
+              "page": 224,
+              "count": 6
+            },
+            {
+              "page": 225,
+              "count": 9
+            },
+            {
+              "page": 226,
+              "count": 3
+            },
+            {
+              "page": 227,
+              "count": 10
+            },
+            {
+              "page": 228,
+              "count": 5
+            },
+            {
+              "page": 229,
+              "count": 3
+            },
+            {
+              "page": 230,
+              "count": 6
+            },
+            {
+              "page": 231,
+              "count": 8
+            },
+            {
+              "page": 232,
+              "count": 4
+            },
+            {
+              "page": 233,
+              "count": 3
+            },
+            {
+              "page": 234,
+              "count": 4
+            },
+            {
+              "page": 235,
+              "count": 5
+            },
+            {
+              "page": 236,
+              "count": 5
+            },
+            {
+              "page": 237,
+              "count": 7
+            },
+            {
+              "page": 238,
+              "count": 4
+            },
+            {
+              "page": 239,
+              "count": 9
+            },
+            {
+              "page": 240,
+              "count": 2
+            },
+            {
+              "page": 241,
+              "count": 1
+            },
+            {
+              "page": 242,
+              "count": 2
+            },
+            {
+              "page": 243,
+              "count": 4
+            },
+            {
+              "page": 244,
+              "count": 2
+            },
+            {
+              "page": 245,
+              "count": 5
+            },
+            {
+              "page": 246,
+              "count": 9
+            },
+            {
+              "page": 247,
+              "count": 4
+            },
+            {
+              "page": 248,
+              "count": 4
+            },
+            {
+              "page": 249,
+              "count": 4
+            },
+            {
+              "page": 250,
+              "count": 6
+            },
+            {
+              "page": 251,
+              "count": 3
+            },
+            {
+              "page": 252,
+              "count": 9
+            },
+            {
+              "page": 253,
+              "count": 2
+            },
+            {
+              "page": 254,
+              "count": 8
+            },
+            {
+              "page": 255,
+              "count": 7
+            },
+            {
+              "page": 256,
+              "count": 9
+            },
+            {
+              "page": 257,
+              "count": 4
+            },
+            {
+              "page": 258,
+              "count": 1
+            },
+            {
+              "page": 259,
+              "count": 6
+            },
+            {
+              "page": 260,
+              "count": 3
+            },
+            {
+              "page": 261,
+              "count": 6
+            },
+            {
+              "page": 262,
+              "count": 4
+            },
+            {
+              "page": 263,
+              "count": 4
+            },
+            {
+              "page": 264,
+              "count": 3
+            },
+            {
+              "page": 265,
+              "count": 6
+            },
+            {
+              "page": 266,
+              "count": 3
+            },
+            {
+              "page": 267,
+              "count": 6
+            },
+            {
+              "page": 268,
+              "count": 6
+            },
+            {
+              "page": 269,
+              "count": 3
+            },
+            {
+              "page": 270,
+              "count": 5
+            },
+            {
+              "page": 271,
+              "count": 11
+            },
+            {
+              "page": 272,
+              "count": 6
+            },
+            {
+              "page": 273,
+              "count": 5
+            },
+            {
+              "page": 274,
+              "count": 4
+            },
+            {
+              "page": 275,
+              "count": 3
+            },
+            {
+              "page": 276,
+              "count": 4
+            },
+            {
+              "page": 277,
+              "count": 3
+            },
+            {
+              "page": 278,
+              "count": 2
+            },
+            {
+              "page": 279,
+              "count": 5
+            },
+            {
+              "page": 280,
+              "count": 8
+            },
+            {
+              "page": 281,
+              "count": 5
+            },
+            {
+              "page": 282,
+              "count": 3
+            },
+            {
+              "page": 283,
+              "count": 5
+            },
+            {
+              "page": 284,
+              "count": 3
+            },
+            {
+              "page": 285,
+              "count": 4
+            },
+            {
+              "page": 286,
+              "count": 1
+            },
+            {
+              "page": 287,
+              "count": 9
+            },
+            {
+              "page": 288,
+              "count": 8
+            },
+            {
+              "page": 289,
+              "count": 3
+            },
+            {
+              "page": 290,
+              "count": 8
+            },
+            {
+              "page": 291,
+              "count": 3
+            },
+            {
+              "page": 292,
+              "count": 3
+            },
+            {
+              "page": 293,
+              "count": 5
+            },
+            {
+              "page": 294,
+              "count": 5
+            },
+            {
+              "page": 295,
+              "count": 4
+            },
+            {
+              "page": 296,
+              "count": 4
+            },
+            {
+              "page": 297,
+              "count": 7
+            },
+            {
+              "page": 298,
+              "count": 1
+            },
+            {
+              "page": 299,
+              "count": 3
+            },
+            {
+              "page": 300,
+              "count": 6
+            },
+            {
+              "page": 301,
+              "count": 1
+            },
+            {
+              "page": 302,
+              "count": 7
+            },
+            {
+              "page": 303,
+              "count": 1
+            },
+            {
+              "page": 304,
+              "count": 5
+            },
+            {
+              "page": 305,
+              "count": 3
+            },
+            {
+              "page": 306,
+              "count": 4
+            },
+            {
+              "page": 307,
+              "count": 3
+            },
+            {
+              "page": 308,
+              "count": 3
+            },
+            {
+              "page": 309,
+              "count": 5
+            },
+            {
+              "page": 310,
+              "count": 4
+            },
+            {
+              "page": 311,
+              "count": 5
+            },
+            {
+              "page": 312,
+              "count": 2
+            },
+            {
+              "page": 313,
+              "count": 4
+            },
+            {
+              "page": 314,
+              "count": 4
+            },
+            {
+              "page": 315,
+              "count": 6
+            },
+            {
+              "page": 316,
+              "count": 1
+            },
+            {
+              "page": 317,
+              "count": 3
+            },
+            {
+              "page": 318,
+              "count": 4
+            },
+            {
+              "page": 319,
+              "count": 6
+            },
+            {
+              "page": 320,
+              "count": 4
+            },
+            {
+              "page": 321,
+              "count": 4
+            },
+            {
+              "page": 322,
+              "count": 1
+            },
+            {
+              "page": 323,
+              "count": 5
+            },
+            {
+              "page": 324,
+              "count": 6
+            },
+            {
+              "page": 325,
+              "count": 3
+            },
+            {
+              "page": 326,
+              "count": 5
+            },
+            {
+              "page": 327,
+              "count": 4
+            },
+            {
+              "page": 328,
+              "count": 4
+            },
+            {
+              "page": 329,
+              "count": 5
+            },
+            {
+              "page": 330,
+              "count": 3
+            },
+            {
+              "page": 331,
+              "count": 8
+            },
+            {
+              "page": 332,
+              "count": 5
+            },
+            {
+              "page": 333,
+              "count": 2
+            },
+            {
+              "page": 334,
+              "count": 8
+            },
+            {
+              "page": 335,
+              "count": 6
+            },
+            {
+              "page": 336,
+              "count": 4
+            },
+            {
+              "page": 337,
+              "count": 6
+            },
+            {
+              "page": 338,
+              "count": 6
+            },
+            {
+              "page": 339,
+              "count": 2
+            },
+            {
+              "page": 340,
+              "count": 4
+            },
+            {
+              "page": 341,
+              "count": 8
+            },
+            {
+              "page": 342,
+              "count": 5
+            },
+            {
+              "page": 343,
+              "count": 0
+            },
+            {
+              "page": 344,
+              "count": 0
+            },
+            {
+              "page": 345,
+              "count": 6
+            },
+            {
+              "page": 346,
+              "count": 2
+            },
+            {
+              "page": 347,
+              "count": 2
+            },
+            {
+              "page": 348,
+              "count": 9
+            },
+            {
+              "page": 349,
+              "count": 7
+            },
+            {
+              "page": 350,
+              "count": 2
+            },
+            {
+              "page": 351,
+              "count": 8
+            },
+            {
+              "page": 352,
+              "count": 7
+            },
+            {
+              "page": 353,
+              "count": 4
+            },
+            {
+              "page": 354,
+              "count": 15
+            },
+            {
+              "page": 355,
+              "count": 9
+            },
+            {
+              "page": 356,
+              "count": 3
+            },
+            {
+              "page": 357,
+              "count": 8
+            },
+            {
+              "page": 358,
+              "count": 4
+            },
+            {
+              "page": 359,
+              "count": 4
+            },
+            {
+              "page": 360,
+              "count": 9
+            },
+            {
+              "page": 361,
+              "count": 2
+            },
+            {
+              "page": 362,
+              "count": 5
+            },
+            {
+              "page": 363,
+              "count": 5
+            },
+            {
+              "page": 364,
+              "count": 4
+            },
+            {
+              "page": 365,
+              "count": 6
+            },
+            {
+              "page": 366,
+              "count": 8
+            },
+            {
+              "page": 367,
+              "count": 7
+            },
+            {
+              "page": 368,
+              "count": 1
+            },
+            {
+              "page": 369,
+              "count": 0
+            },
+            {
+              "page": 370,
+              "count": 13
+            },
+            {
+              "page": 371,
+              "count": 2
+            },
+            {
+              "page": 372,
+              "count": 0
+            },
+            {
+              "page": 373,
+              "count": 6
+            },
+            {
+              "page": 374,
+              "count": 2
+            },
+            {
+              "page": 375,
+              "count": 5
+            },
+            {
+              "page": 376,
+              "count": 1
+            },
+            {
+              "page": 377,
+              "count": 4
+            },
+            {
+              "page": 378,
+              "count": 4
+            },
+            {
+              "page": 379,
+              "count": 7
+            },
+            {
+              "page": 380,
+              "count": 11
+            },
+            {
+              "page": 381,
+              "count": 3
+            },
+            {
+              "page": 382,
+              "count": 4
+            },
+            {
+              "page": 383,
+              "count": 4
+            },
+            {
+              "page": 384,
+              "count": 6
+            },
+            {
+              "page": 385,
+              "count": 4
+            },
+            {
+              "page": 386,
+              "count": 7
+            },
+            {
+              "page": 387,
+              "count": 3
+            },
+            {
+              "page": 388,
+              "count": 0
+            },
+            {
+              "page": 389,
+              "count": 0
+            },
+            {
+              "page": 390,
+              "count": 6
+            },
+            {
+              "page": 391,
+              "count": 13
+            },
+            {
+              "page": 392,
+              "count": 2
+            },
+            {
+              "page": 393,
+              "count": 2
+            },
+            {
+              "page": 394,
+              "count": 5
+            },
+            {
+              "page": 395,
+              "count": 2
+            },
+            {
+              "page": 396,
+              "count": 1
+            },
+            {
+              "page": 397,
+              "count": 6
+            },
+            {
+              "page": 398,
+              "count": 2
+            },
+            {
+              "page": 399,
+              "count": 10
+            },
+            {
+              "page": 400,
+              "count": 3
+            },
+            {
+              "page": 401,
+              "count": 2
+            },
+            {
+              "page": 402,
+              "count": 4
+            },
+            {
+              "page": 403,
+              "count": 6
+            },
+            {
+              "page": 404,
+              "count": 3
+            },
+            {
+              "page": 405,
+              "count": 1
+            },
+            {
+              "page": 406,
+              "count": 1
+            },
+            {
+              "page": 407,
+              "count": 4
+            },
+            {
+              "page": 408,
+              "count": 3
+            },
+            {
+              "page": 409,
+              "count": 5
+            },
+            {
+              "page": 410,
+              "count": 3
+            },
+            {
+              "page": 411,
+              "count": 1
+            },
+            {
+              "page": 412,
+              "count": 0
+            },
+            {
+              "page": 413,
+              "count": 3
+            },
+            {
+              "page": 414,
+              "count": 7
+            },
+            {
+              "page": 415,
+              "count": 3
+            },
+            {
+              "page": 416,
+              "count": 5
+            },
+            {
+              "page": 417,
+              "count": 6
+            },
+            {
+              "page": 418,
+              "count": 1
+            },
+            {
+              "page": 419,
+              "count": 4
+            },
+            {
+              "page": 420,
+              "count": 3
+            },
+            {
+              "page": 421,
+              "count": 2
+            },
+            {
+              "page": 422,
+              "count": 3
+            },
+            {
+              "page": 423,
+              "count": 3
+            },
+            {
+              "page": 424,
+              "count": 6
+            },
+            {
+              "page": 425,
+              "count": 5
+            },
+            {
+              "page": 426,
+              "count": 3
+            },
+            {
+              "page": 427,
+              "count": 1
+            },
+            {
+              "page": 428,
+              "count": 0
+            },
+            {
+              "page": 429,
+              "count": 6
+            },
+            {
+              "page": 430,
+              "count": 2
+            },
+            {
+              "page": 431,
+              "count": 6
+            },
+            {
+              "page": 432,
+              "count": 7
+            },
+            {
+              "page": 433,
+              "count": 1
+            },
+            {
+              "page": 434,
+              "count": 4
+            },
+            {
+              "page": 435,
+              "count": 3
+            },
+            {
+              "page": 436,
+              "count": 3
+            },
+            {
+              "page": 437,
+              "count": 7
+            },
+            {
+              "page": 438,
+              "count": 2
+            },
+            {
+              "page": 439,
+              "count": 4
+            },
+            {
+              "page": 440,
+              "count": 2
+            },
+            {
+              "page": 441,
+              "count": 3
+            },
+            {
+              "page": 442,
+              "count": 5
+            },
+            {
+              "page": 443,
+              "count": 5
+            },
+            {
+              "page": 444,
+              "count": 0
+            },
+            {
+              "page": 445,
+              "count": 4
+            },
+            {
+              "page": 446,
+              "count": 4
+            },
+            {
+              "page": 447,
+              "count": 5
+            },
+            {
+              "page": 448,
+              "count": 3
+            },
+            {
+              "page": 449,
+              "count": 3
+            },
+            {
+              "page": 450,
+              "count": 5
+            },
+            {
+              "page": 451,
+              "count": 2
+            },
+            {
+              "page": 452,
+              "count": 2
+            },
+            {
+              "page": 453,
+              "count": 5
+            },
+            {
+              "page": 454,
+              "count": 1
+            },
+            {
+              "page": 455,
+              "count": 2
+            },
+            {
+              "page": 456,
+              "count": 0
+            },
+            {
+              "page": 457,
+              "count": 6
+            },
+            {
+              "page": 458,
+              "count": 2
+            },
+            {
+              "page": 459,
+              "count": 4
+            },
+            {
+              "page": 460,
+              "count": 5
+            },
+            {
+              "page": 461,
+              "count": 6
+            },
+            {
+              "page": 462,
+              "count": 2
+            },
+            {
+              "page": 463,
+              "count": 7
+            },
+            {
+              "page": 464,
+              "count": 4
+            },
+            {
+              "page": 465,
+              "count": 5
+            },
+            {
+              "page": 466,
+              "count": 3
+            },
+            {
+              "page": 467,
+              "count": 5
+            },
+            {
+              "page": 468,
+              "count": 4
+            },
+            {
+              "page": 469,
+              "count": 6
+            },
+            {
+              "page": 470,
+              "count": 4
+            },
+            {
+              "page": 471,
+              "count": 7
+            },
+            {
+              "page": 472,
+              "count": 2
+            },
+            {
+              "page": 473,
+              "count": 3
+            },
+            {
+              "page": 474,
+              "count": 0
+            },
+            {
+              "page": 475,
+              "count": 6
+            },
+            {
+              "page": 476,
+              "count": 2
+            },
+            {
+              "page": 477,
+              "count": 5
+            },
+            {
+              "page": 478,
+              "count": 2
+            },
+            {
+              "page": 479,
+              "count": 6
+            },
+            {
+              "page": 480,
+              "count": 3
+            },
+            {
+              "page": 481,
+              "count": 2
+            },
+            {
+              "page": 482,
+              "count": 4
+            },
+            {
+              "page": 483,
+              "count": 9
+            },
+            {
+              "page": 484,
+              "count": 3
+            },
+            {
+              "page": 485,
+              "count": 5
+            },
+            {
+              "page": 486,
+              "count": 9
+            },
+            {
+              "page": 487,
+              "count": 3
+            },
+            {
+              "page": 488,
+              "count": 11
+            },
+            {
+              "page": 489,
+              "count": 6
+            },
+            {
+              "page": 490,
+              "count": 5
+            },
+            {
+              "page": 491,
+              "count": 7
+            },
+            {
+              "page": 492,
+              "count": 4
+            },
+            {
+              "page": 493,
+              "count": 10
+            },
+            {
+              "page": 494,
+              "count": 4
+            },
+            {
+              "page": 495,
+              "count": 4
+            },
+            {
+              "page": 496,
+              "count": 3
+            },
+            {
+              "page": 497,
+              "count": 8
+            },
+            {
+              "page": 498,
+              "count": 7
+            },
+            {
+              "page": 499,
+              "count": 2
+            },
+            {
+              "page": 500,
+              "count": 1
+            },
+            {
+              "page": 501,
+              "count": 7
+            },
+            {
+              "page": 502,
+              "count": 1
+            },
+            {
+              "page": 503,
+              "count": 7
+            },
+            {
+              "page": 504,
+              "count": 3
+            },
+            {
+              "page": 505,
+              "count": 2
+            },
+            {
+              "page": 506,
+              "count": 3
+            },
+            {
+              "page": 507,
+              "count": 3
+            },
+            {
+              "page": 508,
+              "count": 5
+            },
+            {
+              "page": 509,
+              "count": 4
+            },
+            {
+              "page": 510,
+              "count": 3
+            },
+            {
+              "page": 511,
+              "count": 2
+            },
+            {
+              "page": 512,
+              "count": 4
+            },
+            {
+              "page": 513,
+              "count": 6
+            },
+            {
+              "page": 514,
+              "count": 4
+            },
+            {
+              "page": 515,
+              "count": 7
+            },
+            {
+              "page": 516,
+              "count": 7
+            },
+            {
+              "page": 517,
+              "count": 7
+            },
+            {
+              "page": 518,
+              "count": 8
+            },
+            {
+              "page": 519,
+              "count": 8
+            },
+            {
+              "page": 520,
+              "count": 7
+            },
+            {
+              "page": 521,
+              "count": 4
+            },
+            {
+              "page": 522,
+              "count": 8
+            },
+            {
+              "page": 523,
+              "count": 9
+            },
+            {
+              "page": 524,
+              "count": 5
+            },
+            {
+              "page": 525,
+              "count": 6
+            },
+            {
+              "page": 526,
+              "count": 5
+            },
+            {
+              "page": 527,
+              "count": 1
+            },
+            {
+              "page": 528,
+              "count": 2
+            },
+            {
+              "page": 529,
+              "count": 5
+            },
+            {
+              "page": 530,
+              "count": 3
+            },
+            {
+              "page": 531,
+              "count": 4
+            },
+            {
+              "page": 532,
+              "count": 3
+            },
+            {
+              "page": 533,
+              "count": 6
+            },
+            {
+              "page": 534,
+              "count": 4
+            },
+            {
+              "page": 535,
+              "count": 4
+            },
+            {
+              "page": 536,
+              "count": 8
+            },
+            {
+              "page": 537,
+              "count": 8
+            },
+            {
+              "page": 538,
+              "count": 4
+            },
+            {
+              "page": 539,
+              "count": 5
+            },
+            {
+              "page": 540,
+              "count": 3
+            },
+            {
+              "page": 541,
+              "count": 4
+            },
+            {
+              "page": 542,
+              "count": 6
+            },
+            {
+              "page": 543,
+              "count": 7
+            },
+            {
+              "page": 544,
+              "count": 3
+            },
+            {
+              "page": 545,
+              "count": 3
+            },
+            {
+              "page": 546,
+              "count": 1
+            },
+            {
+              "page": 547,
+              "count": 1
+            },
+            {
+              "page": 548,
+              "count": 6
+            },
+            {
+              "page": 549,
+              "count": 1
+            },
+            {
+              "page": 550,
+              "count": 0
+            },
+            {
+              "page": 551,
+              "count": 1
+            },
+            {
+              "page": 552,
+              "count": 0
+            },
+            {
+              "page": 553,
+              "count": 4
+            },
+            {
+              "page": 554,
+              "count": 3
+            },
+            {
+              "page": 555,
+              "count": 2
+            },
+            {
+              "page": 556,
+              "count": 4
+            },
+            {
+              "page": 557,
+              "count": 4
+            },
+            {
+              "page": 558,
+              "count": 1
+            },
+            {
+              "page": 559,
+              "count": 4
+            },
+            {
+              "page": 560,
+              "count": 5
+            },
+            {
+              "page": 561,
+              "count": 3
+            },
+            {
+              "page": 562,
+              "count": 4
+            },
+            {
+              "page": 563,
+              "count": 4
+            },
+            {
+              "page": 564,
+              "count": 3
+            },
+            {
+              "page": 565,
+              "count": 5
+            },
+            {
+              "page": 566,
+              "count": 10
+            },
+            {
+              "page": 567,
+              "count": 3
+            },
+            {
+              "page": 568,
+              "count": 5
+            },
+            {
+              "page": 569,
+              "count": 3
+            },
+            {
+              "page": 570,
+              "count": 7
+            },
+            {
+              "page": 571,
+              "count": 3
+            },
+            {
+              "page": 572,
+              "count": 7
+            },
+            {
+              "page": 573,
+              "count": 2
+            },
+            {
+              "page": 574,
+              "count": 2
+            },
+            {
+              "page": 575,
+              "count": 4
+            },
+            {
+              "page": 576,
+              "count": 2
+            },
+            {
+              "page": 577,
+              "count": 3
+            },
+            {
+              "page": 578,
+              "count": 6
+            },
+            {
+              "page": 579,
+              "count": 4
+            },
+            {
+              "page": 580,
+              "count": 1
+            },
+            {
+              "page": 581,
+              "count": 1
+            },
+            {
+              "page": 582,
+              "count": 3
+            },
+            {
+              "page": 583,
+              "count": 2
+            },
+            {
+              "page": 584,
+              "count": 9
+            },
+            {
+              "page": 585,
+              "count": 2
+            },
+            {
+              "page": 586,
+              "count": 6
+            },
+            {
+              "page": 587,
+              "count": 7
+            },
+            {
+              "page": 588,
+              "count": 4
+            },
+            {
+              "page": 589,
+              "count": 11
+            },
+            {
+              "page": 590,
+              "count": 4
+            },
+            {
+              "page": 591,
+              "count": 13
+            },
+            {
+              "page": 592,
+              "count": 2
+            },
+            {
+              "page": 593,
+              "count": 3
+            },
+            {
+              "page": 594,
+              "count": 5
+            },
+            {
+              "page": 595,
+              "count": 8
+            },
+            {
+              "page": 596,
+              "count": 12
+            },
+            {
+              "page": 597,
+              "count": 2
+            },
+            {
+              "page": 598,
+              "count": 11
+            },
+            {
+              "page": 599,
+              "count": 4
+            },
+            {
+              "page": 600,
+              "count": 6
+            },
+            {
+              "page": 601,
+              "count": 8
+            },
+            {
+              "page": 602,
+              "count": 1
+            },
+            {
+              "page": 603,
+              "count": 7
+            },
+            {
+              "page": 604,
+              "count": 5
+            },
+            {
+              "page": 605,
+              "count": 1
+            },
+            {
+              "page": 606,
+              "count": 3
+            },
+            {
+              "page": 607,
+              "count": 6
+            },
+            {
+              "page": 608,
+              "count": 0
+            },
+            {
+              "page": 609,
+              "count": 4
+            },
+            {
+              "page": 610,
+              "count": 3
+            },
+            {
+              "page": 611,
+              "count": 2
+            },
+            {
+              "page": 612,
+              "count": 16
+            },
+            {
+              "page": 613,
+              "count": 8
+            },
+            {
+              "page": 614,
+              "count": 4
+            },
+            {
+              "page": 615,
+              "count": 5
+            },
+            {
+              "page": 616,
+              "count": 2
+            },
+            {
+              "page": 617,
+              "count": 6
+            },
+            {
+              "page": 618,
+              "count": 2
+            },
+            {
+              "page": 619,
+              "count": 13
+            },
+            {
+              "page": 620,
+              "count": 2
+            },
+            {
+              "page": 621,
+              "count": 9
+            },
+            {
+              "page": 622,
+              "count": 4
+            },
+            {
+              "page": 623,
+              "count": 7
+            },
+            {
+              "page": 624,
+              "count": 3
+            },
+            {
+              "page": 625,
+              "count": 4
+            },
+            {
+              "page": 626,
+              "count": 4
+            },
+            {
+              "page": 627,
+              "count": 9
+            },
+            {
+              "page": 628,
+              "count": 3
+            },
+            {
+              "page": 629,
+              "count": 5
+            },
+            {
+              "page": 630,
+              "count": 4
+            },
+            {
+              "page": 631,
+              "count": 3
+            },
+            {
+              "page": 632,
+              "count": 3
+            },
+            {
+              "page": 633,
+              "count": 5
+            },
+            {
+              "page": 634,
+              "count": 4
+            },
+            {
+              "page": 635,
+              "count": 2
+            },
+            {
+              "page": 636,
+              "count": 1
+            },
+            {
+              "page": 637,
+              "count": 2
+            },
+            {
+              "page": 638,
+              "count": 2
+            },
+            {
+              "page": 639,
+              "count": 9
+            },
+            {
+              "page": 640,
+              "count": 10
+            },
+            {
+              "page": 641,
+              "count": 1
+            },
+            {
+              "page": 642,
+              "count": 1
+            },
+            {
+              "page": 643,
+              "count": 4
+            },
+            {
+              "page": 644,
+              "count": 6
+            },
+            {
+              "page": 645,
+              "count": 7
+            },
+            {
+              "page": 646,
+              "count": 1
+            },
+            {
+              "page": 647,
+              "count": 9
+            },
+            {
+              "page": 648,
+              "count": 2
+            },
+            {
+              "page": 649,
+              "count": 1
+            },
+            {
+              "page": 650,
+              "count": 2
+            },
+            {
+              "page": 651,
+              "count": 7
+            },
+            {
+              "page": 652,
+              "count": 4
+            },
+            {
+              "page": 653,
+              "count": 1
+            },
+            {
+              "page": 654,
+              "count": 1
+            },
+            {
+              "page": 655,
+              "count": 1
+            },
+            {
+              "page": 656,
+              "count": 6
+            },
+            {
+              "page": 657,
+              "count": 0
+            },
+            {
+              "page": 658,
+              "count": 1
+            },
+            {
+              "page": 659,
+              "count": 3
+            },
+            {
+              "page": 660,
+              "count": 4
+            },
+            {
+              "page": 661,
+              "count": 4
+            },
+            {
+              "page": 662,
+              "count": 4
+            },
+            {
+              "page": 663,
+              "count": 8
+            },
+            {
+              "page": 664,
+              "count": 1
+            },
+            {
+              "page": 665,
+              "count": 3
+            },
+            {
+              "page": 666,
+              "count": 3
+            },
+            {
+              "page": 667,
+              "count": 6
+            },
+            {
+              "page": 668,
+              "count": 4
+            },
+            {
+              "page": 669,
+              "count": 6
+            },
+            {
+              "page": 670,
+              "count": 4
+            },
+            {
+              "page": 671,
+              "count": 1
+            },
+            {
+              "page": 672,
+              "count": 0
+            },
+            {
+              "page": 673,
+              "count": 9
+            },
+            {
+              "page": 674,
+              "count": 2
+            },
+            {
+              "page": 675,
+              "count": 7
+            },
+            {
+              "page": 676,
+              "count": 7
+            },
+            {
+              "page": 677,
+              "count": 2
+            },
+            {
+              "page": 678,
+              "count": 6
+            },
+            {
+              "page": 679,
+              "count": 5
+            },
+            {
+              "page": 680,
+              "count": 7
+            },
+            {
+              "page": 681,
+              "count": 7
+            },
+            {
+              "page": 682,
+              "count": 2
+            },
+            {
+              "page": 683,
+              "count": 3
+            },
+            {
+              "page": 684,
+              "count": 5
+            },
+            {
+              "page": 685,
+              "count": 3
+            },
+            {
+              "page": 686,
+              "count": 2
+            },
+            {
+              "page": 687,
+              "count": 7
+            },
+            {
+              "page": 688,
+              "count": 5
+            },
+            {
+              "page": 689,
+              "count": 9
+            },
+            {
+              "page": 690,
+              "count": 3
+            },
+            {
+              "page": 691,
+              "count": 0
+            },
+            {
+              "page": 692,
+              "count": 5
+            },
+            {
+              "page": 693,
+              "count": 239
+            },
+            {
+              "page": 694,
+              "count": 353
+            },
+            {
+              "page": 695,
+              "count": 384
+            },
+            {
+              "page": 696,
+              "count": 337
+            },
+            {
+              "page": 697,
+              "count": 358
+            },
+            {
+              "page": 698,
+              "count": 338
+            },
+            {
+              "page": 699,
+              "count": 388
+            },
+            {
+              "page": 700,
+              "count": 446
+            },
+            {
+              "page": 701,
+              "count": 348
+            },
+            {
+              "page": 702,
+              "count": 322
+            },
+            {
+              "page": 703,
+              "count": 214
+            }
+          ],
+          "multiColumnHints": [
+            {
+              "page": 25,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 27,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 28,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 29,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 30,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 31,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 32,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 33,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 34,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 35,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 36,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 37,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 38,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 40,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 41,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 95,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 145,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 165,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 173,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 226,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 236,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 237,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 241,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 247,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 249,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 254,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 259,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 264,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 265,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 266,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 267,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 269,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 273,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 274,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 279,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 280,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 281,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 282,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 285,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 287,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 288,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 289,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 292,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 294,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 295,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 296,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 305,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 308,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 313,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 316,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 317,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 320,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 321,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 322,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 324,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 327,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 329,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 333,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 335,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 336,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 343,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 348,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 349,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 353,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 359,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 360,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 366,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 367,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 371,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 373,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 374,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 378,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 383,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 387,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 399,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 417,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 445,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 457,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 471,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 484,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 485,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 496,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 497,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 499,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 501,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 516,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 526,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 530,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 531,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 557,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 562,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 563,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 573,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 579,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 593,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 598,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 607,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 635,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 640,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 641,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 643,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 645,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 648,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 649,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 680,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 682,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 683,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 684,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 687,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 689,
+              "note": "Possible two-column layout (heuristic)."
+            }
+          ],
+          "struct_tree": "Per-page PDF structure tree is probed; heading hierarchy in chunks uses outline titles + font-size heuristics when outline is missing."
+        },
+        "outlinePresent": true,
+        "sourceKey": "54c2fcee19064db1",
+        "assetPrefix": "rag-assets/54c2fcee19064db1"
+      },
+      {
+        "path": "pdf/The Scientist and Engineer Guide to DSP.pdf",
+        "limits": {
+          "bookmarks": "Outline/bookmarks read via pdf.js getOutline() (titles only; dest resolution partial).",
+          "annotations": "Per-page annotation counts only; form field values and popup text are not expanded into chunks.",
+          "multi_column": "Reading order is line-based (y then x). Multi-column layouts may interleave incorrectly; see multiColumnHints per page when detected.",
+          "vector_vs_raster": "Embedded raster regions: bbox from canvas paint tracking + PNG crops. Pure vector graphics without image paint ops only appear in full-page raster, not as separate crops.",
+          "tables": "Heuristic: ≥3 gap-aligned cells × ≥3 consecutive rows. Headers/units are not guaranteed; inspect markdown.",
+          "code": "Monospace font-name heuristic on text layer; not OCR.",
+          "vision": "Disabled (set RAG_PDF_VISION=1 to enable).",
+          "xobject_paint_ops": 138,
+          "image_regions_recorded": 0,
+          "annotation_pages": [
+            {
+              "page": 1,
+              "count": 0
+            },
+            {
+              "page": 2,
+              "count": 0
+            },
+            {
+              "page": 3,
+              "count": 0
+            },
+            {
+              "page": 4,
+              "count": 0
+            },
+            {
+              "page": 5,
+              "count": 0
+            },
+            {
+              "page": 6,
+              "count": 0
+            },
+            {
+              "page": 7,
+              "count": 0
+            },
+            {
+              "page": 8,
+              "count": 0
+            },
+            {
+              "page": 9,
+              "count": 0
+            },
+            {
+              "page": 10,
+              "count": 0
+            },
+            {
+              "page": 11,
+              "count": 0
+            },
+            {
+              "page": 12,
+              "count": 0
+            },
+            {
+              "page": 13,
+              "count": 0
+            },
+            {
+              "page": 14,
+              "count": 0
+            },
+            {
+              "page": 15,
+              "count": 0
+            },
+            {
+              "page": 16,
+              "count": 0
+            },
+            {
+              "page": 17,
+              "count": 0
+            },
+            {
+              "page": 18,
+              "count": 0
+            },
+            {
+              "page": 19,
+              "count": 0
+            },
+            {
+              "page": 20,
+              "count": 0
+            },
+            {
+              "page": 21,
+              "count": 0
+            },
+            {
+              "page": 22,
+              "count": 0
+            },
+            {
+              "page": 23,
+              "count": 0
+            },
+            {
+              "page": 24,
+              "count": 0
+            },
+            {
+              "page": 25,
+              "count": 0
+            },
+            {
+              "page": 26,
+              "count": 0
+            },
+            {
+              "page": 27,
+              "count": 0
+            },
+            {
+              "page": 28,
+              "count": 0
+            },
+            {
+              "page": 29,
+              "count": 0
+            },
+            {
+              "page": 30,
+              "count": 0
+            },
+            {
+              "page": 31,
+              "count": 0
+            },
+            {
+              "page": 32,
+              "count": 0
+            },
+            {
+              "page": 33,
+              "count": 0
+            },
+            {
+              "page": 34,
+              "count": 0
+            },
+            {
+              "page": 35,
+              "count": 0
+            },
+            {
+              "page": 36,
+              "count": 0
+            },
+            {
+              "page": 37,
+              "count": 0
+            },
+            {
+              "page": 38,
+              "count": 0
+            },
+            {
+              "page": 39,
+              "count": 0
+            },
+            {
+              "page": 40,
+              "count": 0
+            },
+            {
+              "page": 41,
+              "count": 0
+            },
+            {
+              "page": 42,
+              "count": 0
+            },
+            {
+              "page": 43,
+              "count": 0
+            },
+            {
+              "page": 44,
+              "count": 0
+            },
+            {
+              "page": 45,
+              "count": 0
+            },
+            {
+              "page": 46,
+              "count": 0
+            },
+            {
+              "page": 47,
+              "count": 0
+            },
+            {
+              "page": 48,
+              "count": 0
+            },
+            {
+              "page": 49,
+              "count": 0
+            },
+            {
+              "page": 50,
+              "count": 0
+            },
+            {
+              "page": 51,
+              "count": 0
+            },
+            {
+              "page": 52,
+              "count": 0
+            },
+            {
+              "page": 53,
+              "count": 0
+            },
+            {
+              "page": 54,
+              "count": 0
+            },
+            {
+              "page": 55,
+              "count": 0
+            },
+            {
+              "page": 56,
+              "count": 0
+            },
+            {
+              "page": 57,
+              "count": 0
+            },
+            {
+              "page": 58,
+              "count": 0
+            },
+            {
+              "page": 59,
+              "count": 0
+            },
+            {
+              "page": 60,
+              "count": 0
+            },
+            {
+              "page": 61,
+              "count": 0
+            },
+            {
+              "page": 62,
+              "count": 0
+            },
+            {
+              "page": 63,
+              "count": 0
+            },
+            {
+              "page": 64,
+              "count": 0
+            },
+            {
+              "page": 65,
+              "count": 0
+            },
+            {
+              "page": 66,
+              "count": 0
+            },
+            {
+              "page": 67,
+              "count": 0
+            },
+            {
+              "page": 68,
+              "count": 0
+            },
+            {
+              "page": 69,
+              "count": 0
+            },
+            {
+              "page": 70,
+              "count": 0
+            },
+            {
+              "page": 71,
+              "count": 0
+            },
+            {
+              "page": 72,
+              "count": 0
+            },
+            {
+              "page": 73,
+              "count": 0
+            },
+            {
+              "page": 74,
+              "count": 0
+            },
+            {
+              "page": 75,
+              "count": 0
+            },
+            {
+              "page": 76,
+              "count": 0
+            },
+            {
+              "page": 77,
+              "count": 0
+            },
+            {
+              "page": 78,
+              "count": 0
+            },
+            {
+              "page": 79,
+              "count": 0
+            },
+            {
+              "page": 80,
+              "count": 0
+            },
+            {
+              "page": 81,
+              "count": 0
+            },
+            {
+              "page": 82,
+              "count": 0
+            },
+            {
+              "page": 83,
+              "count": 0
+            },
+            {
+              "page": 84,
+              "count": 0
+            },
+            {
+              "page": 85,
+              "count": 0
+            },
+            {
+              "page": 86,
+              "count": 0
+            },
+            {
+              "page": 87,
+              "count": 0
+            },
+            {
+              "page": 88,
+              "count": 0
+            },
+            {
+              "page": 89,
+              "count": 0
+            },
+            {
+              "page": 90,
+              "count": 0
+            },
+            {
+              "page": 91,
+              "count": 0
+            },
+            {
+              "page": 92,
+              "count": 0
+            },
+            {
+              "page": 93,
+              "count": 0
+            },
+            {
+              "page": 94,
+              "count": 0
+            },
+            {
+              "page": 95,
+              "count": 0
+            },
+            {
+              "page": 96,
+              "count": 0
+            },
+            {
+              "page": 97,
+              "count": 0
+            },
+            {
+              "page": 98,
+              "count": 0
+            },
+            {
+              "page": 99,
+              "count": 0
+            },
+            {
+              "page": 100,
+              "count": 0
+            },
+            {
+              "page": 101,
+              "count": 0
+            },
+            {
+              "page": 102,
+              "count": 0
+            },
+            {
+              "page": 103,
+              "count": 0
+            },
+            {
+              "page": 104,
+              "count": 0
+            },
+            {
+              "page": 105,
+              "count": 0
+            },
+            {
+              "page": 106,
+              "count": 0
+            },
+            {
+              "page": 107,
+              "count": 0
+            },
+            {
+              "page": 108,
+              "count": 0
+            },
+            {
+              "page": 109,
+              "count": 0
+            },
+            {
+              "page": 110,
+              "count": 0
+            },
+            {
+              "page": 111,
+              "count": 0
+            },
+            {
+              "page": 112,
+              "count": 0
+            },
+            {
+              "page": 113,
+              "count": 0
+            },
+            {
+              "page": 114,
+              "count": 0
+            },
+            {
+              "page": 115,
+              "count": 0
+            },
+            {
+              "page": 116,
+              "count": 0
+            },
+            {
+              "page": 117,
+              "count": 0
+            },
+            {
+              "page": 118,
+              "count": 0
+            },
+            {
+              "page": 119,
+              "count": 0
+            },
+            {
+              "page": 120,
+              "count": 0
+            },
+            {
+              "page": 121,
+              "count": 0
+            },
+            {
+              "page": 122,
+              "count": 0
+            },
+            {
+              "page": 123,
+              "count": 0
+            },
+            {
+              "page": 124,
+              "count": 0
+            },
+            {
+              "page": 125,
+              "count": 0
+            },
+            {
+              "page": 126,
+              "count": 0
+            },
+            {
+              "page": 127,
+              "count": 0
+            },
+            {
+              "page": 128,
+              "count": 0
+            },
+            {
+              "page": 129,
+              "count": 0
+            },
+            {
+              "page": 130,
+              "count": 0
+            },
+            {
+              "page": 131,
+              "count": 0
+            },
+            {
+              "page": 132,
+              "count": 0
+            },
+            {
+              "page": 133,
+              "count": 0
+            },
+            {
+              "page": 134,
+              "count": 0
+            },
+            {
+              "page": 135,
+              "count": 0
+            },
+            {
+              "page": 136,
+              "count": 0
+            },
+            {
+              "page": 137,
+              "count": 0
+            },
+            {
+              "page": 138,
+              "count": 0
+            },
+            {
+              "page": 139,
+              "count": 0
+            },
+            {
+              "page": 140,
+              "count": 0
+            },
+            {
+              "page": 141,
+              "count": 0
+            },
+            {
+              "page": 142,
+              "count": 0
+            },
+            {
+              "page": 143,
+              "count": 0
+            },
+            {
+              "page": 144,
+              "count": 0
+            },
+            {
+              "page": 145,
+              "count": 0
+            },
+            {
+              "page": 146,
+              "count": 0
+            },
+            {
+              "page": 147,
+              "count": 0
+            },
+            {
+              "page": 148,
+              "count": 0
+            },
+            {
+              "page": 149,
+              "count": 0
+            },
+            {
+              "page": 150,
+              "count": 0
+            },
+            {
+              "page": 151,
+              "count": 0
+            },
+            {
+              "page": 152,
+              "count": 0
+            },
+            {
+              "page": 153,
+              "count": 0
+            },
+            {
+              "page": 154,
+              "count": 0
+            },
+            {
+              "page": 155,
+              "count": 0
+            },
+            {
+              "page": 156,
+              "count": 0
+            },
+            {
+              "page": 157,
+              "count": 0
+            },
+            {
+              "page": 158,
+              "count": 0
+            },
+            {
+              "page": 159,
+              "count": 0
+            },
+            {
+              "page": 160,
+              "count": 0
+            },
+            {
+              "page": 161,
+              "count": 0
+            },
+            {
+              "page": 162,
+              "count": 0
+            },
+            {
+              "page": 163,
+              "count": 0
+            },
+            {
+              "page": 164,
+              "count": 0
+            },
+            {
+              "page": 165,
+              "count": 0
+            },
+            {
+              "page": 166,
+              "count": 0
+            },
+            {
+              "page": 167,
+              "count": 0
+            },
+            {
+              "page": 168,
+              "count": 0
+            },
+            {
+              "page": 169,
+              "count": 0
+            },
+            {
+              "page": 170,
+              "count": 0
+            },
+            {
+              "page": 171,
+              "count": 0
+            },
+            {
+              "page": 172,
+              "count": 0
+            },
+            {
+              "page": 173,
+              "count": 0
+            },
+            {
+              "page": 174,
+              "count": 0
+            },
+            {
+              "page": 175,
+              "count": 0
+            },
+            {
+              "page": 176,
+              "count": 0
+            },
+            {
+              "page": 177,
+              "count": 0
+            },
+            {
+              "page": 178,
+              "count": 0
+            },
+            {
+              "page": 179,
+              "count": 0
+            },
+            {
+              "page": 180,
+              "count": 0
+            },
+            {
+              "page": 181,
+              "count": 0
+            },
+            {
+              "page": 182,
+              "count": 0
+            },
+            {
+              "page": 183,
+              "count": 0
+            },
+            {
+              "page": 184,
+              "count": 0
+            },
+            {
+              "page": 185,
+              "count": 0
+            },
+            {
+              "page": 186,
+              "count": 0
+            },
+            {
+              "page": 187,
+              "count": 0
+            },
+            {
+              "page": 188,
+              "count": 0
+            },
+            {
+              "page": 189,
+              "count": 0
+            },
+            {
+              "page": 190,
+              "count": 0
+            },
+            {
+              "page": 191,
+              "count": 0
+            },
+            {
+              "page": 192,
+              "count": 0
+            },
+            {
+              "page": 193,
+              "count": 0
+            },
+            {
+              "page": 194,
+              "count": 0
+            },
+            {
+              "page": 195,
+              "count": 0
+            },
+            {
+              "page": 196,
+              "count": 0
+            },
+            {
+              "page": 197,
+              "count": 0
+            },
+            {
+              "page": 198,
+              "count": 0
+            },
+            {
+              "page": 199,
+              "count": 0
+            },
+            {
+              "page": 200,
+              "count": 0
+            },
+            {
+              "page": 201,
+              "count": 0
+            },
+            {
+              "page": 202,
+              "count": 0
+            },
+            {
+              "page": 203,
+              "count": 0
+            },
+            {
+              "page": 204,
+              "count": 0
+            },
+            {
+              "page": 205,
+              "count": 0
+            },
+            {
+              "page": 206,
+              "count": 0
+            },
+            {
+              "page": 207,
+              "count": 0
+            },
+            {
+              "page": 208,
+              "count": 0
+            },
+            {
+              "page": 209,
+              "count": 0
+            },
+            {
+              "page": 210,
+              "count": 0
+            },
+            {
+              "page": 211,
+              "count": 0
+            },
+            {
+              "page": 212,
+              "count": 0
+            },
+            {
+              "page": 213,
+              "count": 0
+            },
+            {
+              "page": 214,
+              "count": 0
+            },
+            {
+              "page": 215,
+              "count": 0
+            },
+            {
+              "page": 216,
+              "count": 0
+            },
+            {
+              "page": 217,
+              "count": 0
+            },
+            {
+              "page": 218,
+              "count": 0
+            },
+            {
+              "page": 219,
+              "count": 0
+            },
+            {
+              "page": 220,
+              "count": 0
+            },
+            {
+              "page": 221,
+              "count": 0
+            },
+            {
+              "page": 222,
+              "count": 0
+            },
+            {
+              "page": 223,
+              "count": 0
+            },
+            {
+              "page": 224,
+              "count": 0
+            },
+            {
+              "page": 225,
+              "count": 0
+            },
+            {
+              "page": 226,
+              "count": 0
+            },
+            {
+              "page": 227,
+              "count": 0
+            },
+            {
+              "page": 228,
+              "count": 0
+            },
+            {
+              "page": 229,
+              "count": 0
+            },
+            {
+              "page": 230,
+              "count": 0
+            },
+            {
+              "page": 231,
+              "count": 0
+            },
+            {
+              "page": 232,
+              "count": 0
+            },
+            {
+              "page": 233,
+              "count": 0
+            },
+            {
+              "page": 234,
+              "count": 0
+            },
+            {
+              "page": 235,
+              "count": 0
+            },
+            {
+              "page": 236,
+              "count": 0
+            },
+            {
+              "page": 237,
+              "count": 0
+            },
+            {
+              "page": 238,
+              "count": 0
+            },
+            {
+              "page": 239,
+              "count": 0
+            },
+            {
+              "page": 240,
+              "count": 0
+            },
+            {
+              "page": 241,
+              "count": 0
+            },
+            {
+              "page": 242,
+              "count": 0
+            },
+            {
+              "page": 243,
+              "count": 0
+            },
+            {
+              "page": 244,
+              "count": 0
+            },
+            {
+              "page": 245,
+              "count": 0
+            },
+            {
+              "page": 246,
+              "count": 0
+            },
+            {
+              "page": 247,
+              "count": 0
+            },
+            {
+              "page": 248,
+              "count": 0
+            },
+            {
+              "page": 249,
+              "count": 0
+            },
+            {
+              "page": 250,
+              "count": 0
+            },
+            {
+              "page": 251,
+              "count": 0
+            },
+            {
+              "page": 252,
+              "count": 0
+            },
+            {
+              "page": 253,
+              "count": 0
+            },
+            {
+              "page": 254,
+              "count": 0
+            },
+            {
+              "page": 255,
+              "count": 0
+            },
+            {
+              "page": 256,
+              "count": 0
+            },
+            {
+              "page": 257,
+              "count": 0
+            },
+            {
+              "page": 258,
+              "count": 0
+            },
+            {
+              "page": 259,
+              "count": 0
+            },
+            {
+              "page": 260,
+              "count": 0
+            },
+            {
+              "page": 261,
+              "count": 0
+            },
+            {
+              "page": 262,
+              "count": 0
+            },
+            {
+              "page": 263,
+              "count": 0
+            },
+            {
+              "page": 264,
+              "count": 0
+            },
+            {
+              "page": 265,
+              "count": 0
+            },
+            {
+              "page": 266,
+              "count": 0
+            },
+            {
+              "page": 267,
+              "count": 0
+            },
+            {
+              "page": 268,
+              "count": 0
+            },
+            {
+              "page": 269,
+              "count": 0
+            },
+            {
+              "page": 270,
+              "count": 0
+            },
+            {
+              "page": 271,
+              "count": 0
+            },
+            {
+              "page": 272,
+              "count": 0
+            },
+            {
+              "page": 273,
+              "count": 0
+            },
+            {
+              "page": 274,
+              "count": 0
+            },
+            {
+              "page": 275,
+              "count": 0
+            },
+            {
+              "page": 276,
+              "count": 0
+            },
+            {
+              "page": 277,
+              "count": 0
+            },
+            {
+              "page": 278,
+              "count": 0
+            },
+            {
+              "page": 279,
+              "count": 0
+            },
+            {
+              "page": 280,
+              "count": 0
+            },
+            {
+              "page": 281,
+              "count": 0
+            },
+            {
+              "page": 282,
+              "count": 0
+            },
+            {
+              "page": 283,
+              "count": 0
+            },
+            {
+              "page": 284,
+              "count": 0
+            },
+            {
+              "page": 285,
+              "count": 0
+            },
+            {
+              "page": 286,
+              "count": 0
+            },
+            {
+              "page": 287,
+              "count": 0
+            },
+            {
+              "page": 288,
+              "count": 0
+            },
+            {
+              "page": 289,
+              "count": 0
+            },
+            {
+              "page": 290,
+              "count": 0
+            },
+            {
+              "page": 291,
+              "count": 0
+            },
+            {
+              "page": 292,
+              "count": 0
+            },
+            {
+              "page": 293,
+              "count": 0
+            },
+            {
+              "page": 294,
+              "count": 0
+            },
+            {
+              "page": 295,
+              "count": 0
+            },
+            {
+              "page": 296,
+              "count": 0
+            },
+            {
+              "page": 297,
+              "count": 0
+            },
+            {
+              "page": 298,
+              "count": 0
+            },
+            {
+              "page": 299,
+              "count": 0
+            },
+            {
+              "page": 300,
+              "count": 0
+            },
+            {
+              "page": 301,
+              "count": 0
+            },
+            {
+              "page": 302,
+              "count": 0
+            },
+            {
+              "page": 303,
+              "count": 0
+            },
+            {
+              "page": 304,
+              "count": 0
+            },
+            {
+              "page": 305,
+              "count": 0
+            },
+            {
+              "page": 306,
+              "count": 0
+            },
+            {
+              "page": 307,
+              "count": 0
+            },
+            {
+              "page": 308,
+              "count": 0
+            },
+            {
+              "page": 309,
+              "count": 0
+            },
+            {
+              "page": 310,
+              "count": 0
+            },
+            {
+              "page": 311,
+              "count": 0
+            },
+            {
+              "page": 312,
+              "count": 0
+            },
+            {
+              "page": 313,
+              "count": 0
+            },
+            {
+              "page": 314,
+              "count": 0
+            },
+            {
+              "page": 315,
+              "count": 0
+            },
+            {
+              "page": 316,
+              "count": 0
+            },
+            {
+              "page": 317,
+              "count": 0
+            },
+            {
+              "page": 318,
+              "count": 0
+            },
+            {
+              "page": 319,
+              "count": 0
+            },
+            {
+              "page": 320,
+              "count": 0
+            },
+            {
+              "page": 321,
+              "count": 0
+            },
+            {
+              "page": 322,
+              "count": 0
+            },
+            {
+              "page": 323,
+              "count": 0
+            },
+            {
+              "page": 324,
+              "count": 0
+            },
+            {
+              "page": 325,
+              "count": 0
+            },
+            {
+              "page": 326,
+              "count": 0
+            },
+            {
+              "page": 327,
+              "count": 0
+            },
+            {
+              "page": 328,
+              "count": 0
+            },
+            {
+              "page": 329,
+              "count": 0
+            },
+            {
+              "page": 330,
+              "count": 0
+            },
+            {
+              "page": 331,
+              "count": 0
+            },
+            {
+              "page": 332,
+              "count": 0
+            },
+            {
+              "page": 333,
+              "count": 0
+            },
+            {
+              "page": 334,
+              "count": 0
+            },
+            {
+              "page": 335,
+              "count": 0
+            },
+            {
+              "page": 336,
+              "count": 0
+            },
+            {
+              "page": 337,
+              "count": 0
+            },
+            {
+              "page": 338,
+              "count": 0
+            },
+            {
+              "page": 339,
+              "count": 0
+            },
+            {
+              "page": 340,
+              "count": 0
+            },
+            {
+              "page": 341,
+              "count": 0
+            },
+            {
+              "page": 342,
+              "count": 0
+            },
+            {
+              "page": 343,
+              "count": 0
+            },
+            {
+              "page": 344,
+              "count": 0
+            },
+            {
+              "page": 345,
+              "count": 0
+            },
+            {
+              "page": 346,
+              "count": 0
+            },
+            {
+              "page": 347,
+              "count": 0
+            },
+            {
+              "page": 348,
+              "count": 0
+            },
+            {
+              "page": 349,
+              "count": 0
+            },
+            {
+              "page": 350,
+              "count": 0
+            },
+            {
+              "page": 351,
+              "count": 0
+            },
+            {
+              "page": 352,
+              "count": 0
+            },
+            {
+              "page": 353,
+              "count": 0
+            },
+            {
+              "page": 354,
+              "count": 0
+            },
+            {
+              "page": 355,
+              "count": 0
+            },
+            {
+              "page": 356,
+              "count": 0
+            },
+            {
+              "page": 357,
+              "count": 0
+            },
+            {
+              "page": 358,
+              "count": 0
+            },
+            {
+              "page": 359,
+              "count": 0
+            },
+            {
+              "page": 360,
+              "count": 0
+            },
+            {
+              "page": 361,
+              "count": 0
+            },
+            {
+              "page": 362,
+              "count": 0
+            },
+            {
+              "page": 363,
+              "count": 0
+            },
+            {
+              "page": 364,
+              "count": 0
+            },
+            {
+              "page": 365,
+              "count": 0
+            },
+            {
+              "page": 366,
+              "count": 0
+            },
+            {
+              "page": 367,
+              "count": 0
+            },
+            {
+              "page": 368,
+              "count": 0
+            },
+            {
+              "page": 369,
+              "count": 0
+            },
+            {
+              "page": 370,
+              "count": 0
+            },
+            {
+              "page": 371,
+              "count": 0
+            },
+            {
+              "page": 372,
+              "count": 0
+            },
+            {
+              "page": 373,
+              "count": 0
+            },
+            {
+              "page": 374,
+              "count": 0
+            },
+            {
+              "page": 375,
+              "count": 0
+            },
+            {
+              "page": 376,
+              "count": 0
+            },
+            {
+              "page": 377,
+              "count": 0
+            },
+            {
+              "page": 378,
+              "count": 0
+            },
+            {
+              "page": 379,
+              "count": 0
+            },
+            {
+              "page": 380,
+              "count": 0
+            },
+            {
+              "page": 381,
+              "count": 0
+            },
+            {
+              "page": 382,
+              "count": 0
+            },
+            {
+              "page": 383,
+              "count": 0
+            },
+            {
+              "page": 384,
+              "count": 0
+            },
+            {
+              "page": 385,
+              "count": 0
+            },
+            {
+              "page": 386,
+              "count": 0
+            },
+            {
+              "page": 387,
+              "count": 0
+            },
+            {
+              "page": 388,
+              "count": 0
+            },
+            {
+              "page": 389,
+              "count": 0
+            },
+            {
+              "page": 390,
+              "count": 0
+            },
+            {
+              "page": 391,
+              "count": 0
+            },
+            {
+              "page": 392,
+              "count": 0
+            },
+            {
+              "page": 393,
+              "count": 0
+            },
+            {
+              "page": 394,
+              "count": 0
+            },
+            {
+              "page": 395,
+              "count": 0
+            },
+            {
+              "page": 396,
+              "count": 0
+            },
+            {
+              "page": 397,
+              "count": 0
+            },
+            {
+              "page": 398,
+              "count": 0
+            },
+            {
+              "page": 399,
+              "count": 0
+            },
+            {
+              "page": 400,
+              "count": 0
+            },
+            {
+              "page": 401,
+              "count": 0
+            },
+            {
+              "page": 402,
+              "count": 0
+            },
+            {
+              "page": 403,
+              "count": 0
+            },
+            {
+              "page": 404,
+              "count": 0
+            },
+            {
+              "page": 405,
+              "count": 0
+            },
+            {
+              "page": 406,
+              "count": 0
+            },
+            {
+              "page": 407,
+              "count": 0
+            },
+            {
+              "page": 408,
+              "count": 0
+            },
+            {
+              "page": 409,
+              "count": 0
+            },
+            {
+              "page": 410,
+              "count": 0
+            },
+            {
+              "page": 411,
+              "count": 0
+            },
+            {
+              "page": 412,
+              "count": 0
+            },
+            {
+              "page": 413,
+              "count": 0
+            },
+            {
+              "page": 414,
+              "count": 0
+            },
+            {
+              "page": 415,
+              "count": 0
+            },
+            {
+              "page": 416,
+              "count": 0
+            },
+            {
+              "page": 417,
+              "count": 0
+            },
+            {
+              "page": 418,
+              "count": 0
+            },
+            {
+              "page": 419,
+              "count": 0
+            },
+            {
+              "page": 420,
+              "count": 0
+            },
+            {
+              "page": 421,
+              "count": 0
+            },
+            {
+              "page": 422,
+              "count": 0
+            },
+            {
+              "page": 423,
+              "count": 0
+            },
+            {
+              "page": 424,
+              "count": 0
+            },
+            {
+              "page": 425,
+              "count": 0
+            },
+            {
+              "page": 426,
+              "count": 0
+            },
+            {
+              "page": 427,
+              "count": 0
+            },
+            {
+              "page": 428,
+              "count": 0
+            },
+            {
+              "page": 429,
+              "count": 0
+            },
+            {
+              "page": 430,
+              "count": 0
+            },
+            {
+              "page": 431,
+              "count": 0
+            },
+            {
+              "page": 432,
+              "count": 0
+            },
+            {
+              "page": 433,
+              "count": 0
+            },
+            {
+              "page": 434,
+              "count": 0
+            },
+            {
+              "page": 435,
+              "count": 0
+            },
+            {
+              "page": 436,
+              "count": 0
+            },
+            {
+              "page": 437,
+              "count": 0
+            },
+            {
+              "page": 438,
+              "count": 0
+            },
+            {
+              "page": 439,
+              "count": 0
+            },
+            {
+              "page": 440,
+              "count": 0
+            },
+            {
+              "page": 441,
+              "count": 0
+            },
+            {
+              "page": 442,
+              "count": 0
+            },
+            {
+              "page": 443,
+              "count": 0
+            },
+            {
+              "page": 444,
+              "count": 0
+            },
+            {
+              "page": 445,
+              "count": 0
+            },
+            {
+              "page": 446,
+              "count": 0
+            },
+            {
+              "page": 447,
+              "count": 0
+            },
+            {
+              "page": 448,
+              "count": 0
+            },
+            {
+              "page": 449,
+              "count": 0
+            },
+            {
+              "page": 450,
+              "count": 0
+            },
+            {
+              "page": 451,
+              "count": 0
+            },
+            {
+              "page": 452,
+              "count": 0
+            },
+            {
+              "page": 453,
+              "count": 0
+            },
+            {
+              "page": 454,
+              "count": 0
+            },
+            {
+              "page": 455,
+              "count": 0
+            },
+            {
+              "page": 456,
+              "count": 0
+            },
+            {
+              "page": 457,
+              "count": 0
+            },
+            {
+              "page": 458,
+              "count": 0
+            },
+            {
+              "page": 459,
+              "count": 0
+            },
+            {
+              "page": 460,
+              "count": 0
+            },
+            {
+              "page": 461,
+              "count": 0
+            },
+            {
+              "page": 462,
+              "count": 0
+            },
+            {
+              "page": 463,
+              "count": 0
+            },
+            {
+              "page": 464,
+              "count": 0
+            },
+            {
+              "page": 465,
+              "count": 0
+            },
+            {
+              "page": 466,
+              "count": 0
+            },
+            {
+              "page": 467,
+              "count": 0
+            },
+            {
+              "page": 468,
+              "count": 0
+            },
+            {
+              "page": 469,
+              "count": 0
+            },
+            {
+              "page": 470,
+              "count": 0
+            },
+            {
+              "page": 471,
+              "count": 0
+            },
+            {
+              "page": 472,
+              "count": 0
+            },
+            {
+              "page": 473,
+              "count": 0
+            },
+            {
+              "page": 474,
+              "count": 0
+            },
+            {
+              "page": 475,
+              "count": 0
+            },
+            {
+              "page": 476,
+              "count": 0
+            },
+            {
+              "page": 477,
+              "count": 0
+            },
+            {
+              "page": 478,
+              "count": 0
+            },
+            {
+              "page": 479,
+              "count": 0
+            },
+            {
+              "page": 480,
+              "count": 0
+            },
+            {
+              "page": 481,
+              "count": 0
+            },
+            {
+              "page": 482,
+              "count": 0
+            },
+            {
+              "page": 483,
+              "count": 0
+            },
+            {
+              "page": 484,
+              "count": 0
+            },
+            {
+              "page": 485,
+              "count": 0
+            },
+            {
+              "page": 486,
+              "count": 0
+            },
+            {
+              "page": 487,
+              "count": 0
+            },
+            {
+              "page": 488,
+              "count": 0
+            },
+            {
+              "page": 489,
+              "count": 0
+            },
+            {
+              "page": 490,
+              "count": 0
+            },
+            {
+              "page": 491,
+              "count": 0
+            },
+            {
+              "page": 492,
+              "count": 0
+            },
+            {
+              "page": 493,
+              "count": 0
+            },
+            {
+              "page": 494,
+              "count": 0
+            },
+            {
+              "page": 495,
+              "count": 0
+            },
+            {
+              "page": 496,
+              "count": 0
+            },
+            {
+              "page": 497,
+              "count": 0
+            },
+            {
+              "page": 498,
+              "count": 0
+            },
+            {
+              "page": 499,
+              "count": 0
+            },
+            {
+              "page": 500,
+              "count": 0
+            },
+            {
+              "page": 501,
+              "count": 0
+            },
+            {
+              "page": 502,
+              "count": 0
+            },
+            {
+              "page": 503,
+              "count": 0
+            },
+            {
+              "page": 504,
+              "count": 0
+            },
+            {
+              "page": 505,
+              "count": 0
+            },
+            {
+              "page": 506,
+              "count": 0
+            },
+            {
+              "page": 507,
+              "count": 0
+            },
+            {
+              "page": 508,
+              "count": 0
+            },
+            {
+              "page": 509,
+              "count": 0
+            },
+            {
+              "page": 510,
+              "count": 0
+            },
+            {
+              "page": 511,
+              "count": 0
+            },
+            {
+              "page": 512,
+              "count": 0
+            },
+            {
+              "page": 513,
+              "count": 0
+            },
+            {
+              "page": 514,
+              "count": 0
+            },
+            {
+              "page": 515,
+              "count": 0
+            },
+            {
+              "page": 516,
+              "count": 0
+            },
+            {
+              "page": 517,
+              "count": 0
+            },
+            {
+              "page": 518,
+              "count": 0
+            },
+            {
+              "page": 519,
+              "count": 0
+            },
+            {
+              "page": 520,
+              "count": 0
+            },
+            {
+              "page": 521,
+              "count": 0
+            },
+            {
+              "page": 522,
+              "count": 0
+            },
+            {
+              "page": 523,
+              "count": 0
+            },
+            {
+              "page": 524,
+              "count": 0
+            },
+            {
+              "page": 525,
+              "count": 0
+            },
+            {
+              "page": 526,
+              "count": 0
+            },
+            {
+              "page": 527,
+              "count": 0
+            },
+            {
+              "page": 528,
+              "count": 0
+            },
+            {
+              "page": 529,
+              "count": 0
+            },
+            {
+              "page": 530,
+              "count": 0
+            },
+            {
+              "page": 531,
+              "count": 0
+            },
+            {
+              "page": 532,
+              "count": 0
+            },
+            {
+              "page": 533,
+              "count": 0
+            },
+            {
+              "page": 534,
+              "count": 0
+            },
+            {
+              "page": 535,
+              "count": 0
+            },
+            {
+              "page": 536,
+              "count": 0
+            },
+            {
+              "page": 537,
+              "count": 0
+            },
+            {
+              "page": 538,
+              "count": 0
+            },
+            {
+              "page": 539,
+              "count": 0
+            },
+            {
+              "page": 540,
+              "count": 0
+            },
+            {
+              "page": 541,
+              "count": 0
+            },
+            {
+              "page": 542,
+              "count": 0
+            },
+            {
+              "page": 543,
+              "count": 0
+            },
+            {
+              "page": 544,
+              "count": 0
+            },
+            {
+              "page": 545,
+              "count": 0
+            },
+            {
+              "page": 546,
+              "count": 0
+            },
+            {
+              "page": 547,
+              "count": 0
+            },
+            {
+              "page": 548,
+              "count": 0
+            },
+            {
+              "page": 549,
+              "count": 0
+            },
+            {
+              "page": 550,
+              "count": 0
+            },
+            {
+              "page": 551,
+              "count": 0
+            },
+            {
+              "page": 552,
+              "count": 0
+            },
+            {
+              "page": 553,
+              "count": 0
+            },
+            {
+              "page": 554,
+              "count": 0
+            },
+            {
+              "page": 555,
+              "count": 0
+            },
+            {
+              "page": 556,
+              "count": 0
+            },
+            {
+              "page": 557,
+              "count": 0
+            },
+            {
+              "page": 558,
+              "count": 0
+            },
+            {
+              "page": 559,
+              "count": 0
+            },
+            {
+              "page": 560,
+              "count": 0
+            },
+            {
+              "page": 561,
+              "count": 0
+            },
+            {
+              "page": 562,
+              "count": 0
+            },
+            {
+              "page": 563,
+              "count": 0
+            },
+            {
+              "page": 564,
+              "count": 0
+            },
+            {
+              "page": 565,
+              "count": 0
+            },
+            {
+              "page": 566,
+              "count": 0
+            },
+            {
+              "page": 567,
+              "count": 0
+            },
+            {
+              "page": 568,
+              "count": 0
+            },
+            {
+              "page": 569,
+              "count": 0
+            },
+            {
+              "page": 570,
+              "count": 0
+            },
+            {
+              "page": 571,
+              "count": 0
+            },
+            {
+              "page": 572,
+              "count": 0
+            },
+            {
+              "page": 573,
+              "count": 0
+            },
+            {
+              "page": 574,
+              "count": 0
+            },
+            {
+              "page": 575,
+              "count": 0
+            },
+            {
+              "page": 576,
+              "count": 0
+            },
+            {
+              "page": 577,
+              "count": 0
+            },
+            {
+              "page": 578,
+              "count": 0
+            },
+            {
+              "page": 579,
+              "count": 0
+            },
+            {
+              "page": 580,
+              "count": 0
+            },
+            {
+              "page": 581,
+              "count": 0
+            },
+            {
+              "page": 582,
+              "count": 0
+            },
+            {
+              "page": 583,
+              "count": 0
+            },
+            {
+              "page": 584,
+              "count": 0
+            },
+            {
+              "page": 585,
+              "count": 0
+            },
+            {
+              "page": 586,
+              "count": 0
+            },
+            {
+              "page": 587,
+              "count": 0
+            },
+            {
+              "page": 588,
+              "count": 0
+            },
+            {
+              "page": 589,
+              "count": 0
+            },
+            {
+              "page": 590,
+              "count": 0
+            },
+            {
+              "page": 591,
+              "count": 0
+            },
+            {
+              "page": 592,
+              "count": 0
+            },
+            {
+              "page": 593,
+              "count": 0
+            },
+            {
+              "page": 594,
+              "count": 0
+            },
+            {
+              "page": 595,
+              "count": 0
+            },
+            {
+              "page": 596,
+              "count": 0
+            },
+            {
+              "page": 597,
+              "count": 0
+            },
+            {
+              "page": 598,
+              "count": 0
+            },
+            {
+              "page": 599,
+              "count": 0
+            },
+            {
+              "page": 600,
+              "count": 0
+            },
+            {
+              "page": 601,
+              "count": 0
+            },
+            {
+              "page": 602,
+              "count": 0
+            },
+            {
+              "page": 603,
+              "count": 0
+            },
+            {
+              "page": 604,
+              "count": 0
+            },
+            {
+              "page": 605,
+              "count": 0
+            },
+            {
+              "page": 606,
+              "count": 0
+            },
+            {
+              "page": 607,
+              "count": 0
+            },
+            {
+              "page": 608,
+              "count": 0
+            },
+            {
+              "page": 609,
+              "count": 0
+            },
+            {
+              "page": 610,
+              "count": 0
+            },
+            {
+              "page": 611,
+              "count": 0
+            },
+            {
+              "page": 612,
+              "count": 0
+            },
+            {
+              "page": 613,
+              "count": 0
+            },
+            {
+              "page": 614,
+              "count": 0
+            },
+            {
+              "page": 615,
+              "count": 0
+            },
+            {
+              "page": 616,
+              "count": 0
+            },
+            {
+              "page": 617,
+              "count": 0
+            },
+            {
+              "page": 618,
+              "count": 0
+            },
+            {
+              "page": 619,
+              "count": 0
+            },
+            {
+              "page": 620,
+              "count": 0
+            },
+            {
+              "page": 621,
+              "count": 0
+            },
+            {
+              "page": 622,
+              "count": 0
+            },
+            {
+              "page": 623,
+              "count": 0
+            },
+            {
+              "page": 624,
+              "count": 0
+            },
+            {
+              "page": 625,
+              "count": 0
+            },
+            {
+              "page": 626,
+              "count": 0
+            },
+            {
+              "page": 627,
+              "count": 0
+            },
+            {
+              "page": 628,
+              "count": 0
+            },
+            {
+              "page": 629,
+              "count": 0
+            },
+            {
+              "page": 630,
+              "count": 0
+            },
+            {
+              "page": 631,
+              "count": 0
+            },
+            {
+              "page": 632,
+              "count": 0
+            },
+            {
+              "page": 633,
+              "count": 0
+            },
+            {
+              "page": 634,
+              "count": 0
+            },
+            {
+              "page": 635,
+              "count": 0
+            },
+            {
+              "page": 636,
+              "count": 0
+            },
+            {
+              "page": 637,
+              "count": 0
+            },
+            {
+              "page": 638,
+              "count": 0
+            },
+            {
+              "page": 639,
+              "count": 0
+            },
+            {
+              "page": 640,
+              "count": 0
+            },
+            {
+              "page": 641,
+              "count": 0
+            },
+            {
+              "page": 642,
+              "count": 0
+            },
+            {
+              "page": 643,
+              "count": 0
+            },
+            {
+              "page": 644,
+              "count": 0
+            },
+            {
+              "page": 645,
+              "count": 0
+            },
+            {
+              "page": 646,
+              "count": 0
+            },
+            {
+              "page": 647,
+              "count": 0
+            },
+            {
+              "page": 648,
+              "count": 0
+            },
+            {
+              "page": 649,
+              "count": 0
+            },
+            {
+              "page": 650,
+              "count": 0
+            },
+            {
+              "page": 651,
+              "count": 0
+            },
+            {
+              "page": 652,
+              "count": 0
+            },
+            {
+              "page": 653,
+              "count": 0
+            },
+            {
+              "page": 654,
+              "count": 0
+            },
+            {
+              "page": 655,
+              "count": 0
+            },
+            {
+              "page": 656,
+              "count": 0
+            },
+            {
+              "page": 657,
+              "count": 0
+            },
+            {
+              "page": 658,
+              "count": 0
+            },
+            {
+              "page": 659,
+              "count": 0
+            },
+            {
+              "page": 660,
+              "count": 0
+            },
+            {
+              "page": 661,
+              "count": 0
+            },
+            {
+              "page": 662,
+              "count": 0
+            },
+            {
+              "page": 663,
+              "count": 0
+            },
+            {
+              "page": 664,
+              "count": 0
+            }
+          ],
+          "multiColumnHints": [
+            {
+              "page": 10,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 14,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 15,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 17,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 18,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 22,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 23,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 26,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 27,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 28,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 32,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 34,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 36,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 37,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 42,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 44,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 46,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 47,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 48,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 49,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 50,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 51,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 52,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 53,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 54,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 56,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 58,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 62,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 63,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 67,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 68,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 70,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 72,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 74,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 75,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 76,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 78,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 79,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 82,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 83,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 84,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 85,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 87,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 88,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 91,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 92,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 94,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 95,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 97,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 98,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 99,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 101,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 102,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 103,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 104,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 105,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 106,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 107,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 108,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 110,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 111,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 112,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 113,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 116,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 118,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 120,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 121,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 122,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 123,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 125,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 128,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 129,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 130,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 131,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 133,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 134,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 137,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 138,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 139,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 140,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 143,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 144,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 146,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 147,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 148,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 150,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 152,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 155,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 158,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 160,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 161,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 162,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 163,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 164,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 166,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 167,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 169,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 170,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 171,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 172,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 173,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 175,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 176,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 177,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 178,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 180,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 182,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 183,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 184,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 186,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 187,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 188,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 190,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 191,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 192,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 193,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 194,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 196,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 197,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 198,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 199,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 200,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 202,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 203,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 206,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 207,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 208,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 209,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 210,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 211,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 212,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 213,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 214,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 215,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 216,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 217,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 218,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 220,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 221,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 222,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 223,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 224,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 226,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 228,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 229,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 230,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 231,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 232,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 235,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 236,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 237,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 238,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 239,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 241,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 242,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 244,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 245,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 246,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 250,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 251,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 252,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 254,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 255,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 257,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 258,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 259,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 260,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 261,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 262,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 264,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 266,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 267,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 268,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 269,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 270,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 271,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 272,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 273,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 274,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 275,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 276,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 277,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 278,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 279,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 280,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 281,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 282,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 284,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 285,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 286,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 287,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 288,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 289,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 290,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 291,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 292,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 294,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 295,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 296,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 297,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 299,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 300,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 302,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 304,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 305,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 306,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 307,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 311,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 313,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 314,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 316,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 317,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 318,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 319,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 320,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 322,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 325,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 326,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 328,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 329,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 332,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 333,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 334,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 336,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 339,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 340,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 342,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 343,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 345,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 347,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 348,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 352,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 353,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 357,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 358,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 360,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 361,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 363,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 365,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 366,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 367,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 368,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 369,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 370,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 371,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 372,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 373,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 376,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 377,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 381,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 382,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 384,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 387,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 388,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 389,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 392,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 394,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 397,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 398,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 399,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 400,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 401,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 402,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 403,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 404,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 408,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 409,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 411,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 414,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 415,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 416,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 417,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 418,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 421,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 422,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 423,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 424,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 426,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 428,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 429,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 430,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 431,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 432,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 433,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 434,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 436,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 437,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 439,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 440,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 443,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 444,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 446,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 448,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 449,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 450,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 452,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 454,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 456,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 459,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 460,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 461,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 463,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 464,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 465,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 468,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 469,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 472,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 473,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 474,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 476,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 477,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 478,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 479,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 482,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 484,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 485,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 486,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 487,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 488,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 489,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 490,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 492,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 494,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 496,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 497,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 498,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 499,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 500,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 502,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 506,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 508,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 509,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 510,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 511,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 514,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 515,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 516,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 517,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 518,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 519,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 520,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 523,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 525,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 526,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 527,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 530,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 533,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 535,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 538,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 540,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 541,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 544,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 545,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 547,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 549,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 551,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 552,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 554,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 557,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 558,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 560,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 562,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 565,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 567,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 568,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 569,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 570,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 571,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 572,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 573,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 574,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 575,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 578,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 580,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 581,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 582,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 583,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 584,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 587,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 588,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 589,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 591,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 592,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 593,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 595,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 596,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 597,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 598,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 599,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 600,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 601,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 602,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 605,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 606,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 607,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 608,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 609,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 610,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 611,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 613,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 614,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 615,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 617,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 620,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 622,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 623,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 624,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 625,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 627,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 628,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 629,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 630,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 633,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 634,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 635,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 636,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 638,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 640,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 642,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 643,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 644,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 646,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 647,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 649,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 650,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 653,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 654,
+              "note": "Possible two-column layout (heuristic)."
+            },
+            {
+              "page": 656,
+              "note": "Possible two-column layout (heuristic)."
+            }
+          ],
+          "struct_tree": "Per-page PDF structure tree is probed; heading hierarchy in chunks uses outline titles + font-size heuristics when outline is missing."
+        },
+        "outlinePresent": true,
+        "sourceKey": "3f8e32b10b05ed8f",
+        "assetPrefix": "rag-assets/3f8e32b10b05ed8f"
+      }
+    ]
+  },
+  "chunkCount": 4259,
+  "exportedAt": "2026-04-18T08:17:37.460Z",
+  "exportSource": "/Users/veacks/Sites/flowise-dsp-rag/public/rag.json"
+}

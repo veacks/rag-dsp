@@ -11,7 +11,7 @@ public/rag.json
 public/rag-assets/
 
 # Portable vector export (manifest + jsonl)
-export/
+
 
 # Logs & debug
 logs/
