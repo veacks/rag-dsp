@@ -23,6 +23,7 @@ export interface RankOptions {
 
 export interface SearchRequest {
   query: string;
+  embedding?: number[] | Float32Array;
   limit?: number;
   minScore?: number;
   rankOptions?: RankOptions;

@@ -10,6 +10,7 @@ Portable core contracts and retrieval helpers for DSP RAG workflows.
 - `createSearchResponse(request, ranked, options?)`
 - `search(request, seedCandidates, extensions?)`
 - `createCoreRuntime(extensions?)`
+- `createSqliteVectorSearch(options)` from `@dsprag/core/sqlite`
 
 ## Stable contracts
 
@@ -29,3 +30,29 @@ This package ships dual ESM exports:
 - Browser condition import: `dist/browser/index.mjs`
 
 Both outputs are free of Node-only built-ins.
+
+## SQLite vector search
+
+`@dsprag/core/sqlite` uses `@dao-xyz/sqlite3-vec` for SQLite vector search:
+
+- Node: native SQLite through `better-sqlite3`.
+- Browser: SQLite WASM with OPFS when available.
+
+```js
+import { createSqliteVectorSearch, search } from '@dsprag/core/sqlite';
+
+const vectorSearch = await createSqliteVectorSearch({
+  database: './export/vector-db/sqlite/rag.sqlite',
+  mode: 'native'
+});
+
+const response = await search(
+  { query: 'fft filters', embedding: queryEmbedding, limit: 8 },
+  [],
+  { vectorSearch }
+);
+
+await vectorSearch.close();
+```
+
+The caller supplies `embedding`; core does not call an embedding provider.

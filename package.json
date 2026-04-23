@@ -43,9 +43,11 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@dao-xyz/sqlite3-vec": "^0.0.19",
     "@langchain/openai": "^1.4.4",
     "@langchain/textsplitters": "^1.0.1",
     "@napi-rs/canvas": "^0.1.99",
+    "better-sqlite3": "^12.9.0",
     "dotenv": "^16.6.1",
     "flowise": "^3.1.2",
     "langchain": "^1.3.3",

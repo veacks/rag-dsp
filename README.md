@@ -67,7 +67,7 @@ SQLite + vector export (`sqlite-vec` compatible):
 
 ```bash
 rager export --sqlite
-# writes ./export/vector-db/sqlite/{schema.sql,data.sql,manifest.json,README.md}
+# writes ./export/vector-db/sqlite/{rag.sqlite,schema.sql,data.sql,manifest.json,README.md}
 ```
 
 Data + skills export (skill name from `sources/rag-settings.json`):
@@ -95,6 +95,33 @@ Browser WASM export (Web Worker + SQLite WASM loader + OPFS + frontend API):
 ```bash
 rager export --wasm
 # writes ./export/vector-db/web/{rag-sqlite.worker.js,rag-api.js,rows.jsonl,manifest.json}
+```
+
+The generated worker imports `@dao-xyz/sqlite3-vec`, so browser usage should go through a bundler or an import map that resolves that package.
+
+The forward-facing monorepo CLI exposes the same export path:
+
+```bash
+npx @dsprag/cli export --sqlite --wasm
+```
+
+Runtime SQLite vector search is available from `@dsprag/core/sqlite`. Query embeddings must be generated with the same embedding model used to build `rag.json`.
+
+```js
+import { createSqliteVectorSearch, search } from '@dsprag/core/sqlite';
+
+const vectorSearch = await createSqliteVectorSearch({
+  database: './export/vector-db/sqlite/rag.sqlite',
+  mode: 'native'
+});
+
+const response = await search(
+  { query: 'filters and FFT', embedding: queryEmbedding, limit: 8 },
+  [],
+  { vectorSearch }
+);
+
+await vectorSearch.close();
 ```
 
 Standalone integration contracts:

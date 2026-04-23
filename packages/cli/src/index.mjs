@@ -10,6 +10,7 @@ import {
   statSync,
   writeFileSync
 } from 'node:fs';
+import { execFileSync } from 'node:child_process';
 import os from 'node:os';
 import path from 'node:path';
 import { packageRoot as skillAssetsRoot, readBaseTemplates, renderTemplate } from '@dsprag/skill-assets';
@@ -99,6 +100,9 @@ function formatResult(command, payload, jsonOnly) {
       for (const row of payload.installed) {
         console.log(`Installed ${row.platform}: ${row.file}`);
       }
+    }
+    if (command === 'export') {
+      console.log(payload.output);
     }
   }
   console.log(JSON.stringify({ command, ...payload }));
@@ -394,12 +398,25 @@ async function runUninstall(flags) {
   formatResult('uninstall', { removed, missing, targetBase }, flags.json);
 }
 
+async function runExport(args, flags) {
+  const scriptPath = path.join(process.cwd(), 'scripts', 'export-vector-db.mjs');
+  if (!existsSync(scriptPath)) {
+    throw new Error('Cannot find scripts/export-vector-db.mjs in the current project.');
+  }
+  const output = execFileSync(process.execPath, [scriptPath, ...args], {
+    cwd: process.cwd(),
+    encoding: 'utf8',
+    stdio: ['ignore', 'pipe', 'pipe']
+  }).trim();
+  formatResult('export', { output }, flags.json);
+}
+
 export async function runCli(argv = process.argv.slice(2)) {
   const { positional, flags } = parseArgs(argv);
   const command = positional[0];
   if (!command) {
     throw new Error(
-      'Usage: dsprag <init|versions|update|uninstall> [flags] (use --json for machine-readable output)'
+      'Usage: dsprag <init|versions|update|uninstall|export> [flags] (use --json for machine-readable output)'
     );
   }
   if (command === 'init') {
@@ -418,5 +435,9 @@ export async function runCli(argv = process.argv.slice(2)) {
     await runUninstall(flags);
     return;
   }
-  throw new Error('Usage: dsprag <init|versions|update|uninstall> [flags]');
+  if (command === 'export') {
+    await runExport(positional.slice(1), flags);
+    return;
+  }
+  throw new Error('Usage: dsprag <init|versions|update|uninstall|export> [flags]');
 }

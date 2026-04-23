@@ -2,6 +2,7 @@ import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'no
 import os from 'node:os';
 import path from 'node:path';
 import { execFileSync } from 'node:child_process';
+import { createSqliteVectorSearch, search } from '../../packages/core/src/sqlite.mjs';
 
 const repoRoot = process.cwd();
 const cliBin = path.join(repoRoot, 'packages', 'cli', 'bin', 'dsprag.mjs');
@@ -33,6 +34,36 @@ try {
 
   run('node', [cliBin, 'update', '--offline'], cliDir);
   run('node', [cliBin, 'update', '--offline'], cliDir);
+
+  const ragPath = path.join(cliDir, 'rag.json');
+  const exportDir = path.join(cliDir, 'vector-export');
+  writeFileSync(
+    ragPath,
+    `${JSON.stringify({
+      schemaVersion: 5,
+      embeddingModel: 'release-smoke',
+      chunks: [
+        { id: 'fft', text: 'Fast Fourier transform bins', metadata: { source: 'dsp' }, embedding: [1, 0, 0] },
+        { id: 'filter', text: 'Low pass filter design', metadata: { source: 'dsp' }, embedding: [0, 1, 0] },
+        { id: 'noise', text: 'White noise generation', metadata: { source: 'dsp' }, embedding: [0, 0, 1] }
+      ]
+    })}\n`,
+    'utf8'
+  );
+  run('node', [cliBin, 'export', '--rag', ragPath, '--out', exportDir, '--sqlite', '--wasm'], repoRoot);
+  assert(existsSync(path.join(exportDir, 'sqlite', 'rag.sqlite')), 'sqlite database export missing');
+  assert(existsSync(path.join(exportDir, 'web', 'rag-sqlite.worker.js')), 'wasm worker export missing');
+  const vectorSearch = await createSqliteVectorSearch({
+    database: path.join(exportDir, 'sqlite', 'rag.sqlite'),
+    mode: 'native'
+  });
+  const searchResponse = await search(
+    { query: 'fourier bins', embedding: [0.95, 0.05, 0], limit: 2 },
+    [],
+    { vectorSearch }
+  );
+  await vectorSearch.close();
+  assert(searchResponse.results[0]?.id === 'fft', 'sqlite vector search returned wrong nearest chunk');
 
   const keepPath = path.join(cliDir, '.cursor', 'rules', 'dsprag', 'KEEP.txt');
   writeFileSync(keepPath, 'keep\n', 'utf8');

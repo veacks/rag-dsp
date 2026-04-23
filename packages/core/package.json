@@ -12,6 +12,12 @@
       "browser": "./dist/browser/index.mjs",
       "import": "./dist/node/index.mjs",
       "default": "./dist/node/index.mjs"
+    },
+    "./sqlite": {
+      "types": "./dist/sqlite.d.ts",
+      "browser": "./dist/browser/sqlite.mjs",
+      "import": "./dist/node/sqlite.mjs",
+      "default": "./dist/node/sqlite.mjs"
     }
   },
   "files": [
@@ -25,5 +31,9 @@
     "test": "node --test ./test/*.test.mjs",
     "smoke:node": "npm run build && node --eval \"import('./dist/node/index.mjs')\"",
     "smoke:browser": "npm run build && node --conditions=browser --eval \"import('./dist/browser/index.mjs')\""
+  },
+  "dependencies": {
+    "@dao-xyz/sqlite3-vec": "^0.0.19",
+    "better-sqlite3": "^12.9.0"
   }
 }
