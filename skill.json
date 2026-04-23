@@ -1,0 +1,32 @@
+{
+  "id": "skill-generator-rag",
+  "name": "DSP RAG Skill Generator",
+  "version": "0.1.0",
+  "description": "Scaffold and install RAG-enabled agent skills across supported AI platforms.",
+  "packages": {
+    "cli": "@dsprag/cli",
+    "core": "@dsprag/core",
+    "mcp": "@dsprag/mcp",
+    "skillAssets": "@dsprag/skill-assets"
+  },
+  "platforms": [
+    "antigravity",
+    "augment",
+    "claude",
+    "codebuddy",
+    "codex",
+    "continue",
+    "copilot",
+    "cursor",
+    "droid",
+    "gemini",
+    "kilocode",
+    "kiro",
+    "opencode",
+    "qoder",
+    "roocode",
+    "trae",
+    "warp",
+    "windsurf"
+  ]
+}

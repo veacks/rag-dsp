@@ -1,0 +1,39 @@
+name: Release Smoke
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  smoke:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Verify skill metadata
+        run: npm run verify:skill-json
+
+      - name: Validate platform manifests
+        run: npm run -w @dsprag/skill-assets ci:platform-manifests
+
+      - name: Core smoke
+        run: npm run -w @dsprag/core test && npm run -w @dsprag/core smoke:node && npm run -w @dsprag/core smoke:browser
+
+      - name: CLI and MCP release verification
+        run: npm run verify:release

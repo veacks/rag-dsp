@@ -4,7 +4,9 @@
   "private": false,
   "type": "module",
   "main": "./src/index.mjs",
-  "bin": "./bin/dsprag-mcp.mjs",
+  "bin": {
+    "dsprag-mcp": "./bin/dsprag-mcp.mjs"
+  },
   "exports": {
     ".": "./src/index.mjs"
   },

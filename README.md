@@ -152,6 +152,51 @@ npm publish
 
 Use a [scoped name](https://docs.npmjs.com/cli/v10/using-npm/scope) (`@your-scope/flowise-dsp-rag`) if the unscoped name is taken; update `"name"` in `package.json` first.
 
+## DSPRAG Monorepo Packages
+
+This repository now also contains scoped packages for multi-platform skill installation and MCP runtime:
+
+- `@dsprag/cli` (`dsprag` binary)
+- `@dsprag/core`
+- `@dsprag/mcp` (`dsprag-mcp` binary)
+- `@dsprag/skill-assets`
+
+### Install and Init
+
+```bash
+npx @dsprag/cli init --ai cursor
+npx @dsprag/cli init --ai all
+```
+
+Offline mode:
+
+```bash
+npx @dsprag/cli init --ai cursor --offline
+```
+
+Lifecycle commands:
+
+```bash
+npx @dsprag/cli versions
+npx @dsprag/cli update
+npx @dsprag/cli uninstall
+```
+
+### MCP Runtime Commands
+
+```bash
+npx @dsprag/mcp init
+npx @dsprag/mcp config show
+npx @dsprag/mcp start
+npx @dsprag/mcp stop
+```
+
+### Migration Notes
+
+- Previous ad-hoc skill installs can be migrated by running `npx @dsprag/cli init --ai <platform> --force`.
+- Installer metadata is tracked in `.dsprag/install-manifest.json` to ensure safe update/uninstall behavior.
+- Uninstall removes installer-managed files only; unrelated files are preserved.
+
 ## License
 
 ISC (see `package.json`).

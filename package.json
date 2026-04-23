@@ -26,7 +26,10 @@
     "build:transcripts": "node bin/rager.mjs transcripts",
     "export:vectors": "node bin/rager.mjs export",
     "upsert:flowise": "node bin/rager.mjs upsert",
-    "serve:rag": "node bin/rager.mjs serve"
+    "serve:rag": "node bin/rager.mjs serve",
+    "verify:release": "node ./scripts/release/verify-e2e.mjs",
+    "verify:skill-json": "node ./scripts/release/verify-skill-json.mjs",
+    "release:pack": "node ./scripts/release/pack-workspaces.mjs"
   },
   "keywords": [
     "rag",

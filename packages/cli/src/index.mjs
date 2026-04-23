@@ -1,9 +1,11 @@
 import {
   cpSync,
   existsSync,
+  lstatSync,
   mkdirSync,
   readFileSync,
   readdirSync,
+  rmdirSync,
   rmSync,
   statSync,
   writeFileSync
@@ -16,13 +18,18 @@ const SKILL_ID = 'skill-generator-rag';
 const INSTALLER_VERSION = '0.1.0';
 const METADATA_DIR = '.dsprag';
 const METADATA_FILE = 'install-manifest.json';
+const RELEASES_FALLBACK = {
+  latest: INSTALLER_VERSION,
+  versions: [INSTALLER_VERSION]
+};
 
 function parseArgs(argv) {
   const flags = {
     ai: null,
     offline: false,
     force: false,
-    global: false
+    global: false,
+    json: false
   };
   const positional = [];
   for (let i = 0; i < argv.length; i += 1) {
@@ -44,9 +51,57 @@ function parseArgs(argv) {
       flags.global = true;
       continue;
     }
+    if (arg === '--json') {
+      flags.json = true;
+      continue;
+    }
     positional.push(arg);
   }
   return { flags, positional };
+}
+
+function formatResult(command, payload, jsonOnly) {
+  if (!jsonOnly) {
+    if (command === 'versions') {
+      console.log(`Latest: ${payload.latest}`);
+      console.log(`Available: ${payload.available.join(', ')}`);
+      if (payload.installed.length === 0) {
+        console.log('Installed: none');
+      } else {
+        console.log('Installed:');
+        for (const row of payload.installed) {
+          console.log(`- ${row.platform} @ ${row.installerVersion}`);
+        }
+      }
+    }
+    if (command === 'update') {
+      if (payload.updated.length === 0) {
+        console.log('No installed platforms found.');
+      } else {
+        for (const row of payload.updated) {
+          console.log(`Updated ${row.platform}: ${row.file}`);
+        }
+      }
+    }
+    if (command === 'uninstall') {
+      if (payload.removed.length === 0) {
+        console.log('Nothing to uninstall.');
+      } else {
+        for (const row of payload.removed) {
+          console.log(`Uninstalled ${row.platform}`);
+        }
+      }
+      if (payload.missing.length > 0) {
+        console.log(`Already absent: ${payload.missing.join(', ')}`);
+      }
+    }
+    if (command === 'init') {
+      for (const row of payload.installed) {
+        console.log(`Installed ${row.platform}: ${row.file}`);
+      }
+    }
+  }
+  console.log(JSON.stringify({ command, ...payload }));
 }
 
 function listLocalPlatforms() {
@@ -78,6 +133,24 @@ async function loadManifest(platform, offline) {
     }
   }
   return loadLocalManifest(platform);
+}
+
+async function loadReleaseMetadata(offline) {
+  const releasesUrl = process.env.DSPRAG_RELEASES_URL;
+  if (!offline && releasesUrl) {
+    try {
+      const response = await fetch(releasesUrl);
+      if (response.ok) {
+        const body = await response.json();
+        if (Array.isArray(body?.versions) && typeof body?.latest === 'string') {
+          return body;
+        }
+      }
+    } catch {
+      // Fall back to local release metadata.
+    }
+  }
+  return RELEASES_FALLBACK;
 }
 
 function getBaseData() {
@@ -215,16 +288,43 @@ function installPlatform(targetBase, platform, manifest, force) {
   return toPosixRelative(targetBase, skillFile);
 }
 
-export async function runCli(argv = process.argv.slice(2)) {
-  const { positional, flags } = parseArgs(argv);
-  const command = positional[0];
-  if (command !== 'init') {
-    throw new Error('Usage: dsprag init --ai <platform|all> [--offline] [--global] [--force]');
+function removeIfEmpty(dir) {
+  if (!existsSync(dir)) {
+    return;
   }
+  if (!lstatSync(dir).isDirectory()) {
+    return;
+  }
+  if (readdirSync(dir).length === 0) {
+    rmdirSync(dir);
+  }
+}
+
+function uninstallPlatform(targetBase, platform, installEntry) {
+  const managed = [...(installEntry.managedFiles ?? [])];
+  const files = managed.filter((item) => !item.endsWith('/')).sort((a, b) => b.length - a.length);
+  for (const relativePath of files) {
+    const absolutePath = path.join(targetBase, relativePath);
+    if (!existsSync(absolutePath)) {
+      continue;
+    }
+    const st = lstatSync(absolutePath);
+    if (st.isDirectory()) {
+      continue;
+    }
+    rmSync(absolutePath, { force: true });
+  }
+
+  const skillRoot = path.join(targetBase, installEntry.root, installEntry.skillPath);
+  const dataDir = path.join(skillRoot, 'data');
+  removeIfEmpty(dataDir);
+  removeIfEmpty(skillRoot);
+}
+
+async function runInit(flags) {
   if (!flags.ai) {
     throw new Error('Missing required flag: --ai <platform|all>');
   }
-
   const targetBase = flags.global ? os.homedir() : process.cwd();
   const platforms = flags.ai === 'all' ? listLocalPlatforms() : [flags.ai];
   const installed = [];
@@ -233,7 +333,90 @@ export async function runCli(argv = process.argv.slice(2)) {
     const file = installPlatform(targetBase, platform, manifest, flags.force);
     installed.push({ platform, file });
   }
-  for (const item of installed) {
-    console.log(`Installed ${item.platform}: ${item.file}`);
+  formatResult('init', { installed, targetBase }, flags.json);
+}
+
+async function runVersions(flags) {
+  const targetBase = flags.global ? os.homedir() : process.cwd();
+  const release = await loadReleaseMetadata(flags.offline);
+  const installManifest = readInstallManifest(targetBase);
+  const installed = Object.values(installManifest.installs ?? {}).map((row) => ({
+    platform: row.platform,
+    installerVersion: row.installerVersion ?? 'unknown'
+  }));
+  formatResult(
+    'versions',
+    {
+      latest: release.latest,
+      available: release.versions,
+      installed,
+      targetBase
+    },
+    flags.json
+  );
+}
+
+async function runUpdate(flags) {
+  const targetBase = flags.global ? os.homedir() : process.cwd();
+  const release = await loadReleaseMetadata(flags.offline);
+  const installManifest = readInstallManifest(targetBase);
+  const platforms = Object.keys(installManifest.installs ?? {});
+  const updated = [];
+  for (const platform of platforms) {
+    const manifest = await loadManifest(platform, flags.offline);
+    const file = installPlatform(targetBase, platform, manifest, true);
+    updated.push({ platform, file, toVersion: release.latest });
   }
+  formatResult('update', { updated, latest: release.latest, targetBase }, flags.json);
+}
+
+async function runUninstall(flags) {
+  const targetBase = flags.global ? os.homedir() : process.cwd();
+  const installManifest = readInstallManifest(targetBase);
+  const installed = installManifest.installs ?? {};
+  const targets = flags.ai ? [flags.ai] : Object.keys(installed);
+  const removed = [];
+  const missing = [];
+
+  for (const platform of targets) {
+    const entry = installed[platform];
+    if (!entry) {
+      missing.push(platform);
+      continue;
+    }
+    uninstallPlatform(targetBase, platform, entry);
+    delete installed[platform];
+    removed.push({ platform });
+  }
+
+  installManifest.installs = installed;
+  writeInstallManifest(targetBase, installManifest);
+  formatResult('uninstall', { removed, missing, targetBase }, flags.json);
+}
+
+export async function runCli(argv = process.argv.slice(2)) {
+  const { positional, flags } = parseArgs(argv);
+  const command = positional[0];
+  if (!command) {
+    throw new Error(
+      'Usage: dsprag <init|versions|update|uninstall> [flags] (use --json for machine-readable output)'
+    );
+  }
+  if (command === 'init') {
+    await runInit(flags);
+    return;
+  }
+  if (command === 'versions') {
+    await runVersions(flags);
+    return;
+  }
+  if (command === 'update') {
+    await runUpdate(flags);
+    return;
+  }
+  if (command === 'uninstall') {
+    await runUninstall(flags);
+    return;
+  }
+  throw new Error('Usage: dsprag <init|versions|update|uninstall> [flags]');
 }
