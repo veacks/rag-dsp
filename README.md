@@ -59,7 +59,7 @@ Portable export next to the repo (manifest + JSONL):
 ```bash
 rager export
 # or: npm run export:vectors
-# Defaults: RAG_PATH=./public/rag.json, EXPORT_DIR=./export/vector-db
+# Defaults: RAG_PATH=./public/rag.json, EXPORT_DIR=./packages/core/ragdataset
 # See: rager export --help
 ```
 
@@ -67,14 +67,15 @@ SQLite + vector export (`sqlite-vec` compatible):
 
 ```bash
 rager export --sqlite
-# writes ./export/vector-db/sqlite/{rag.sqlite,schema.sql,data.sql,manifest.json,README.md}
+# writes ./packages/core/ragdataset/sqlite/{schema.sql,data-001.sql,manifest.json,README.md}
+# add --sqlite-db if you also want rag.sqlite
 ```
 
 Data + skills export (skill name from `sources/rag-settings.json`):
 
 ```bash
 rager export --sqlite --with-skills
-# writes ./export/vector-db/skills/<target>/<skill-name>/SKILL.md
+# writes ./packages/core/ragdataset/skills/<target>/<skill-name>/SKILL.md
 ```
 
 Skill naming options:
@@ -94,7 +95,8 @@ Browser WASM export (Web Worker + SQLite WASM loader + OPFS + frontend API):
 
 ```bash
 rager export --wasm
-# writes ./export/vector-db/web/{rag-sqlite.worker.js,rag-api.js,rows.jsonl,manifest.json}
+# writes ./packages/core/ragdataset/web/{rag-sqlite.worker.js,rag-api.js,manifest.json}
+# worker bootstraps from ../sqlite/manifest.json + schema.sql + data-xxx.sql
 ```
 
 The generated worker imports `@dao-xyz/sqlite3-vec`, so browser usage should go through a bundler or an import map that resolves that package.
@@ -111,8 +113,8 @@ Runtime SQLite vector search is available from `@dsprag/core/sqlite`. Query embe
 import { createSqliteVectorSearch, search } from '@dsprag/core/sqlite';
 
 const vectorSearch = await createSqliteVectorSearch({
-  database: './export/vector-db/sqlite/rag.sqlite',
-  mode: 'native'
+  mode: 'native',
+  sqlDatasetDir: './packages/core/ragdataset/sqlite'
 });
 
 const response = await search(

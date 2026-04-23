@@ -42,8 +42,8 @@ Both outputs are free of Node-only built-ins.
 import { createSqliteVectorSearch, search } from '@dsprag/core/sqlite';
 
 const vectorSearch = await createSqliteVectorSearch({
-  database: './export/vector-db/sqlite/rag.sqlite',
-  mode: 'native'
+  mode: 'native',
+  sqlDatasetDir: './packages/core/ragdataset/sqlite'
 });
 
 const response = await search(
@@ -56,3 +56,4 @@ await vectorSearch.close();
 ```
 
 The caller supplies `embedding`; core does not call an embedding provider.
+By default, core can bootstrap from SQL dataset files (`manifest.json`, `schema.sql`, `data-xxx.sql`).

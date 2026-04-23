@@ -2,6 +2,9 @@ export * from './index.mjs';
 
 import { createDatabase } from '@dao-xyz/sqlite3-vec';
 
+const DEFAULT_SQL_DATASET_DIR = './packages/core/ragdataset/sqlite';
+const DEFAULT_SQL_MANIFEST_URL = './sqlite/manifest.json';
+
 function toVectorBuffer(value) {
   if (!value) {
     throw new Error('SQLite vector search requires request.embedding.');
@@ -43,6 +46,13 @@ function normalizeOptions(options = {}) {
     mode,
     databaseName,
     directory,
+    sqlDatasetDir: options.sqlDatasetDir ?? DEFAULT_SQL_DATASET_DIR,
+    sqlManifestPath:
+      options.sqlManifestPath ??
+      `${String(options.sqlDatasetDir ?? DEFAULT_SQL_DATASET_DIR).replace(/\/$/, '')}/manifest.json`,
+    sqlManifestUrl: options.sqlManifestUrl ?? DEFAULT_SQL_MANIFEST_URL,
+    bootstrapSqlDataset: options.bootstrapSqlDataset ?? true,
+    forceReloadSqlDataset: options.forceReloadSqlDataset ?? false
   };
 }
 
@@ -59,6 +69,102 @@ async function assertVecAvailable(db) {
   }
 }
 
+async function readNodeManifest(manifestPath) {
+  const [{ readFile }, { resolve }] = await Promise.all([
+    import('node:fs/promises'),
+    import('node:path')
+  ]);
+  const fullPath = resolve(manifestPath);
+  const raw = await readFile(fullPath, 'utf8');
+  return { manifest: JSON.parse(raw), manifestPath: fullPath };
+}
+
+async function readNodeSqlBundle(manifestPath, manifest) {
+  const [{ readFile }, { dirname, resolve }] = await Promise.all([
+    import('node:fs/promises'),
+    import('node:path')
+  ]);
+  const root = dirname(manifestPath);
+  const schemaFile = manifest?.sqlite?.schemaFile ?? 'schema.sql';
+  const dataSqlFiles = Array.isArray(manifest?.sqlite?.dataSqlFiles) ? manifest.sqlite.dataSqlFiles : [];
+  if (dataSqlFiles.length === 0) {
+    throw new Error('SQLite manifest has no sqlite.dataSqlFiles entries.');
+  }
+  const schemaSql = await readFile(resolve(root, schemaFile), 'utf8');
+  const dataSql = [];
+  for (const file of dataSqlFiles) {
+    dataSql.push(await readFile(resolve(root, file), 'utf8'));
+  }
+  return { schemaSql, dataSql };
+}
+
+async function readBrowserManifest(manifestUrl) {
+  const res = await fetch(manifestUrl);
+  if (!res.ok) {
+    throw new Error(`Unable to fetch sqlite manifest at ${manifestUrl}: ${res.status}`);
+  }
+  return res.json();
+}
+
+async function readBrowserSqlBundle(manifestUrl, manifest) {
+  const schemaFile = manifest?.sqlite?.schemaFile ?? 'schema.sql';
+  const dataSqlFiles = Array.isArray(manifest?.sqlite?.dataSqlFiles) ? manifest.sqlite.dataSqlFiles : [];
+  if (dataSqlFiles.length === 0) {
+    throw new Error('SQLite manifest has no sqlite.dataSqlFiles entries.');
+  }
+  const schemaUrl = new URL(schemaFile, manifestUrl).toString();
+  const schemaRes = await fetch(schemaUrl);
+  if (!schemaRes.ok) {
+    throw new Error(`Unable to fetch sqlite schema at ${schemaUrl}: ${schemaRes.status}`);
+  }
+  const schemaSql = await schemaRes.text();
+  const dataSql = [];
+  for (const file of dataSqlFiles) {
+    const fileUrl = new URL(file, manifestUrl).toString();
+    const res = await fetch(fileUrl);
+    if (!res.ok) {
+      throw new Error(`Unable to fetch sqlite data at ${fileUrl}: ${res.status}`);
+    }
+    dataSql.push(await res.text());
+  }
+  return { schemaSql, dataSql };
+}
+
+async function getExistingRowCount(db) {
+  try {
+    const statement = await db.prepare('SELECT COUNT(*) AS count FROM rag_chunks');
+    return Number(statement.get({})?.count ?? 0);
+  } catch {
+    return 0;
+  }
+}
+
+async function bootstrapSqlDataset(db, options) {
+  if (!options.bootstrapSqlDataset) return;
+  const existing = await getExistingRowCount(db);
+  if (!options.forceReloadSqlDataset && existing > 0) return;
+
+  let schemaSql = '';
+  let dataSql = [];
+  if (options.mode === 'wasm') {
+    const manifest = await readBrowserManifest(options.sqlManifestUrl);
+    ({ schemaSql, dataSql } = await readBrowserSqlBundle(options.sqlManifestUrl, manifest));
+  } else {
+    const { manifest, manifestPath } = await readNodeManifest(options.sqlManifestPath);
+    ({ schemaSql, dataSql } = await readNodeSqlBundle(manifestPath, manifest));
+  }
+
+  if (options.forceReloadSqlDataset) {
+    try {
+      await db.exec('DELETE FROM rag_vec; DELETE FROM rag_chunks;');
+    } catch {}
+  }
+  await db.exec(schemaSql);
+  for (const sql of dataSql) {
+    await db.exec(sql);
+  }
+}
+
 /**
  * Create a vectorSearch extension backed by rag_chunks + rag_vec.
  *
@@ -67,6 +173,11 @@ async function assertVecAvailable(db) {
  *   mode?: 'auto' | 'native' | 'wasm',
  *   directory?: string,
  *   databaseName?: string,
+ *   sqlDatasetDir?: string,
+ *   sqlManifestPath?: string,
+ *   sqlManifestUrl?: string,
+ *   bootstrapSqlDataset?: boolean,
+ *   forceReloadSqlDataset?: boolean,
  *   loadExtension?: string,
  *   logger?: { print?: (...args: any[]) => void, printErr?: (...args: any[]) => void },
  * }} options
@@ -82,6 +193,7 @@ export async function createSqliteVectorSearch(options = {}) {
   });
   await db.open();
   await assertVecAvailable(db);
+  await bootstrapSqlDataset(db, normalized);
 
   const sql = `
 SELECT

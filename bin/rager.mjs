@@ -87,7 +87,7 @@ Options:
 Examples:
   rager build
   rager transcripts
-  rager export --out ./export/vector-db
+  rager export --out ./packages/core/ragdataset
   rager upsert
   rager serve
   rager serve dist -p 8080
